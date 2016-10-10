@@ -29,7 +29,7 @@ public class MenuState extends State{
     public void render() {
         _sb.setProjectionMatrix(_cam.combined);
         _sb.begin();
-        _sb.draw(background, 0,0);
+        _sb.draw(background, 0, 0);
         _sb.end();
     }
 
