@@ -23,7 +23,7 @@ public class PlayState extends State {
     private void init() {
         ResourceHandler.init();
         _level = new Level("maps/map_01.tmx", _sb);
-        _player = new Player(ResourceHandler.PLAYER_TEXTURE, new Vector2(15, 15), .6f);
+        _player = new Player(ResourceHandler.PLAYER_TEXTURE, new Vector2(15, 15), .45f);
     }
 
     @Override
