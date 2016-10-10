@@ -23,7 +23,7 @@ public class PlayState extends State {
     private void init() {
         ResourceHandler.init();
         _level = new Level("maps/map_01.tmx", _sb);
-        _player = new Player(ResourceHandler.PLAYER_TEXTURE, new Vector2(0, 0), 1.0f);
+        _player = new Player(ResourceHandler.PLAYER_TEXTURE, new Vector2(15, 15), .6f);
     }
 
     @Override
@@ -54,9 +54,9 @@ public class PlayState extends State {
 
         //_cam.updateCam(dt, playerPosX, playerPosY); // This should be used when we have a player.
         _cam.update();
-        _player.update();
 
         // If Game Over set this: _gsm.set(new MenuState(_gsm, _sb));
+        _player.update(_cam);
     }
 
     @Override

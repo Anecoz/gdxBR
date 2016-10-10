@@ -14,6 +14,7 @@ public class Level {
     // How many tiles in x/y-direction
     public static int MAP_WIDTH;
     public static int MAP_HEIGHT;
+    public static float PIX_TO_WORLD_FACTOR;
 
     private final static String COLLISION_PROPERTY = "isCollision";
     private final static String SHADOWCASTER_PROPERTY = "isShadowCaster";
@@ -26,8 +27,9 @@ public class Level {
         _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
         MAP_WIDTH = _tileLayer.getWidth();
         MAP_HEIGHT = _tileLayer.getHeight();
+        PIX_TO_WORLD_FACTOR = 1.0f/_tileLayer.getTileHeight();
 
-        _mapRenderer = new OrthogonalTiledMapRenderer(map, 1/32f, batch);
+        _mapRenderer = new OrthogonalTiledMapRenderer(map, PIX_TO_WORLD_FACTOR, batch);
     }
 
     public void render(OrthographicCamera camera) {
