@@ -1,6 +1,7 @@
 package com.anecoz.br.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -15,7 +16,7 @@ public class MenuState extends State{
 
     @Override
     public void handleInput() {
-        if(Gdx.input.justTouched()){
+        if(Gdx.input.isKeyPressed(Input.Keys.ENTER)){
             _gsm.set(new PlayState(_gsm, _sb));
         }
     }
