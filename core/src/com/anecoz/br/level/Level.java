@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.*;
 
 // Abstraction for the level, i.e. tiles etc
 public class Level {
@@ -26,7 +27,7 @@ public class Level {
         MAP_WIDTH = _tileLayer.getWidth();
         MAP_HEIGHT = _tileLayer.getHeight();
 
-        _mapRenderer = new OrthogonalTiledMapRenderer(map, 1/64f, batch);
+        _mapRenderer = new OrthogonalTiledMapRenderer(map, 1/32f, batch);
     }
 
     public void render(OrthographicCamera camera) {
@@ -48,5 +49,10 @@ public class Level {
         return isProperty(COLLISION_PROPERTY, x, y);
     }
     public boolean isTileShadowCasterAt(int x, int y) {return isProperty(SHADOWCASTER_PROPERTY, x, y);}
+
+    public static Rectangle getBounds() {
+        Rectangle rect = new Rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT);
+        return rect;
+    }
 }
 

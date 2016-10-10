@@ -10,7 +10,7 @@ public class MenuState extends State{
 
     public MenuState(GameStateManager gsm, SpriteBatch sb) {
         super(gsm, sb);
-        _cam.setToOrtho(false, 800 / 2, 600 / 2);
+        _cam.setToOrtho(false, 800, 600);
         background = new Texture("badlogic.jpg");
     }
 

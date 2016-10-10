@@ -3,6 +3,7 @@ package com.anecoz.br.states;
 import com.anecoz.br.level.Level;
 import com.anecoz.br.logic.Player;
 import com.anecoz.br.utils.ResourceHandler;
+import com.anecoz.br.graphics.Camera;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,7 +17,7 @@ public class PlayState extends State {
     public PlayState(GameStateManager gsm, SpriteBatch sb) {
         super(gsm, sb);
         init();
-        _cam.setToOrtho(false, Level.MAP_WIDTH, Level.MAP_WIDTH);
+        _cam.setToOrtho(false, Camera.WIN_SIZE_X, Camera.WIN_SIZE_Y);
     }
 
     private void init() {
@@ -30,19 +31,20 @@ public class PlayState extends State {
         // Change these to translate the player position and NOT the Camera.
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
             _cam.translate(0f, 1.0f);
-            System.out.println(_cam.position);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             _cam.translate(0f, -1.0f);
-            System.out.println(_cam.position);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
             _cam.translate(-1.0f, 0f);
-            System.out.println(_cam.position);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
            _cam.translate(1.0f, 0f);
-            System.out.println(_cam.position);
+        }
+
+        // Exit the playstate with escape
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            _gsm.set(new MenuState(_gsm, _sb));
         }
     }
 
@@ -54,7 +56,7 @@ public class PlayState extends State {
         _cam.update();
         _player.update();
 
-        // If Game Over set this: gsm.set(new MenuState(gsm));
+        // If Game Over set this: _gsm.set(new MenuState(_gsm, _sb));
     }
 
     @Override
