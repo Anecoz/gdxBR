@@ -15,6 +15,7 @@ public class Level {
     public static int MAP_HEIGHT;
 
     private final static String COLLISION_PROPERTY = "isCollision";
+    private final static String SHADOWCASTER_PROPERTY = "isShadowCaster";
 
     private OrthogonalTiledMapRenderer _mapRenderer;
     private TiledMapTileLayer _tileLayer;
@@ -43,8 +44,9 @@ public class Level {
                 .get(prop, String.class) != null;
     }
 
-    public boolean isTileBuildableAt(int x, int y) {
+    public boolean isTileCollidableAt(int x, int y) {
         return isProperty(COLLISION_PROPERTY, x, y);
     }
+    public boolean isTileShadowCasterAt(int x, int y) {return isProperty(SHADOWCASTER_PROPERTY, x, y);}
 }
 
