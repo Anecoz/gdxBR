@@ -8,15 +8,15 @@ import com.anecoz.br.states.GameStateManager;
 import com.anecoz.br.states.MenuState;
 
 public class BRGame extends ApplicationAdapter {
-	private GameStateManager gsm;
-	private SpriteBatch batch;
+	private GameStateManager _gsm;
+	private SpriteBatch _batch;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		gsm = new GameStateManager();
+		_batch = new SpriteBatch();
+		_gsm = new GameStateManager();
 
-		gsm.push(new MenuState(gsm));
+		_gsm.push(new MenuState(_gsm, _batch));
 	}
 
 	@Override
@@ -24,8 +24,8 @@ public class BRGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		gsm.update(Gdx.graphics.getDeltaTime());
-		gsm.render(batch);
+		_gsm.update(Gdx.graphics.getDeltaTime());
+		_gsm.render();
 	}
 	
 	@Override

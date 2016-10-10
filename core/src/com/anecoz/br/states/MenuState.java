@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class MenuState extends State{
     private Texture background;
 
-    public MenuState(GameStateManager gsm) {
-        super(gsm);
-        cam.setToOrtho(false, 800 / 2, 600 / 2);
+    public MenuState(GameStateManager gsm, SpriteBatch sb) {
+        super(gsm, sb);
+        _cam.setToOrtho(false, 800 / 2, 600 / 2);
         background = new Texture("badlogic.jpg");
     }
 
     @Override
     public void handleInput() {
         if(Gdx.input.justTouched()){
-            gsm.set(new PlayState(gsm));
+            _gsm.set(new PlayState(_gsm, _sb));
         }
     }
 
@@ -26,11 +26,11 @@ public class MenuState extends State{
     }
 
     @Override
-    public void render(SpriteBatch sb) {
-        sb.setProjectionMatrix(cam.combined);
-        sb.begin();
-        sb.draw(background, 0,0);
-        sb.end();
+    public void render() {
+        _sb.setProjectionMatrix(_cam.combined);
+        _sb.begin();
+        _sb.draw(background, 0,0);
+        _sb.end();
     }
 
     @Override
