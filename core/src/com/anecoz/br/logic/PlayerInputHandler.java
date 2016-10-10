@@ -1,6 +1,7 @@
 package com.anecoz.br.logic;
 
 import com.anecoz.br.level.Level;
+import com.anecoz.br.logic.collision.CollisionHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -38,5 +39,32 @@ public class PlayerInputHandler {
         float angle = tmp.angle();
 
         _player.setRotation(angle - 90);
+    }
+
+    public void uptadeMovement(Level level) {
+        Vector2 tmp = new Vector2();
+        tmp.x = _player.getPosition().x;
+        tmp.y = _player.getPosition().y;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            _player.getPosition().y += Player.SPEED;
+            if (CollisionHandler.checkPlayerCollision(_player, level))
+                _player.getPosition().y = tmp.y;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            _player.getPosition().y -= Player.SPEED;
+            if (CollisionHandler.checkPlayerCollision(_player, level))
+                _player.getPosition().y = tmp.y;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            _player.getPosition().x -= Player.SPEED;
+            if (CollisionHandler.checkPlayerCollision(_player, level))
+                _player.getPosition().x = tmp.x;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            _player.getPosition().x += Player.SPEED;
+            if (CollisionHandler.checkPlayerCollision(_player, level))
+                _player.getPosition().x = tmp.x;
+        }
     }
 }

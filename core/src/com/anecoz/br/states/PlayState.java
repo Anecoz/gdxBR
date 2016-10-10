@@ -29,7 +29,7 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         // Change these to translate the player position and NOT the Camera.
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+        /*if(Gdx.input.isKeyPressed(Input.Keys.W)){
             _cam.translate(0f, 1.0f);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
@@ -40,7 +40,7 @@ public class PlayState extends State {
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
            _cam.translate(1.0f, 0f);
-        }
+        }*/
 
         // Exit the playstate with escape
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
@@ -52,11 +52,11 @@ public class PlayState extends State {
     public void update(float dt) {
         handleInput();
 
-        //_cam.updateCam(dt, playerPosX, playerPosY); // This should be used when we have a player.
+        _cam.updateCam(dt, _player.getPosition().x, _player.getPosition().y);
         _cam.update();
 
         // If Game Over set this: _gsm.set(new MenuState(_gsm, _sb));
-        _player.update(_cam);
+        _player.update(_cam, _level);
     }
 
     @Override

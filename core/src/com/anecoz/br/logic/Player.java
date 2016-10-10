@@ -1,11 +1,12 @@
 package com.anecoz.br.logic;
 
+import com.anecoz.br.level.Level;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class Player extends DrawableEntity {
-    private static final float SPEED = 0.06f;
+    public static float SPEED = 0.06f;
 
     private PlayerInputHandler _inputHandler;
 
@@ -15,7 +16,8 @@ public class Player extends DrawableEntity {
         _inputHandler = new PlayerInputHandler(this);
     }
 
-    public void update(OrthographicCamera camera) {
+    public void update(OrthographicCamera camera, Level level) {
         _inputHandler.updateRotation(camera);
+        _inputHandler.uptadeMovement(level);
     }
 }
