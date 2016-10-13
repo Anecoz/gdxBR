@@ -18,6 +18,6 @@ public class Player extends DrawableEntity {
 
     public void update(OrthographicCamera camera, Level level) {
         _inputHandler.updateRotation(camera);
-        _inputHandler.uptadeMovement(level);
+        _inputHandler.updateMovement(level);
     }
 }

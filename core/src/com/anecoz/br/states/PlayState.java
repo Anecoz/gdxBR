@@ -52,8 +52,8 @@ public class PlayState extends State {
     public void update(float dt) {
         handleInput();
 
-        _cam.updateCam(dt, _player.getPosition().x, _player.getPosition().y);
         _cam.update();
+        _cam.updateCam(dt, _player.getPosition().x, _player.getPosition().y);
 
         // If Game Over set this: _gsm.set(new MenuState(_gsm, _sb));
         _player.update(_cam, _level);

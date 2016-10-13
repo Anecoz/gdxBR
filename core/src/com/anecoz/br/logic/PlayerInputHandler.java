@@ -41,7 +41,7 @@ public class PlayerInputHandler {
         _player.setRotation(angle - 90);
     }
 
-    public void uptadeMovement(Level level) {
+    public void updateMovement(Level level) {
         Vector2 tmp = new Vector2();
         tmp.x = _player.getPosition().x;
         tmp.y = _player.getPosition().y;
