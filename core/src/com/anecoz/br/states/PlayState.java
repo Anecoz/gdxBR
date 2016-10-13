@@ -57,6 +57,9 @@ public class PlayState extends State {
 
         // If Game Over set this: _gsm.set(new MenuState(_gsm, _sb));
         _player.update(_cam, _level);
+
+        // Fps counter
+        Gdx.graphics.setTitle("Epic BR Game. FPS: " + Integer.toString(Gdx.graphics.getFramesPerSecond()));
     }
 
     @Override
