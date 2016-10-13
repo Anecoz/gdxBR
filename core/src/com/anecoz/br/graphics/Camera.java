@@ -24,9 +24,9 @@ public class Camera extends OrthographicCamera {
         //The result is roughly: old_position*0.9 + target * 0.1
         Vector3 cameraPosition = this.position;
         cameraPosition.scl(speed);
-        target.scl(delta);
+        //target.scl(delta);
         cameraPosition.add(target);
-        this.position.set(cameraPosition);
+        this.position.set(target); //< chrhe note: keep this for now until we make maps with padded tilesets (removes flicker)
 
         checkBounds();
     }

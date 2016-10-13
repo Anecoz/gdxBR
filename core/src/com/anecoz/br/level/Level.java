@@ -1,6 +1,7 @@
 package com.anecoz.br.level;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -23,8 +24,13 @@ public class Level {
     private TiledMapTileLayer _tileLayer;
 
     public Level(String mapName, SpriteBatch batch) {
-        TiledMap map = new TmxMapLoader().load(mapName);
+        TmxMapLoader.Parameters params = new TmxMapLoader.Parameters();
+        params.textureMinFilter = Texture.TextureFilter.Nearest;
+        params.textureMagFilter = Texture.TextureFilter.Nearest;
+
+        TiledMap map = new TmxMapLoader().load(mapName, params);
         _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
+
         MAP_WIDTH = _tileLayer.getWidth();
         MAP_HEIGHT = _tileLayer.getHeight();
         PIX_TO_WORLD_FACTOR = 1.0f/_tileLayer.getTileHeight();
@@ -53,8 +59,7 @@ public class Level {
     public boolean isTileShadowCasterAt(int x, int y) {return isProperty(SHADOWCASTER_PROPERTY, x, y);}
 
     public static Rectangle getBounds() {
-        Rectangle rect = new Rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT);
-        return rect;
+        return new Rectangle(0, 0, MAP_WIDTH, MAP_HEIGHT);
     }
 }
 
