@@ -1,8 +1,7 @@
 package com.anecoz.br;
 
 import com.anecoz.br.components.*;
-import com.anecoz.br.systems.EntityRenderSystem;
-import com.anecoz.br.systems.TiledMapRenderSystem;
+import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
@@ -68,8 +67,14 @@ public class EntityManager {
     private void initSystems() {
         EntityRenderSystem renderSystem = new EntityRenderSystem(_sb, _cam, _pixToWorldFactor);
         TiledMapRenderSystem tiledRenderSystem = new TiledMapRenderSystem(_sb, _cam);
+        InputSystem inputSystem = new InputSystem(_cam, _pixToWorldFactor);
+        CameraSystem cameraSystem = new CameraSystem(_cam);
+        MovementSystem movementSystem = new MovementSystem();
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
+        _engine.addSystem(inputSystem);
+        _engine.addSystem(cameraSystem);
+        _engine.addSystem(movementSystem);
     }
 }
