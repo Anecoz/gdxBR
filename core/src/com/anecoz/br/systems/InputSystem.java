@@ -20,6 +20,7 @@ public class InputSystem extends EntitySystem {
     private ComponentMapper<RenderComponent> rc = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<PositionComponent> pc = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> tc = ComponentMapper.getFor(TextureComponent.class);
+    private ComponentMapper<PlayerInputComponent> pic = ComponentMapper.getFor(PlayerInputComponent.class);
 
     public InputSystem(OrthographicCamera cam) {
         _cam = cam;
@@ -42,6 +43,7 @@ public class InputSystem extends EntitySystem {
         RenderComponent renComp;
         PositionComponent posComp;
         TextureComponent texComp;
+        PlayerInputComponent inputComp;
 
         for (int i = 0; i < _entities.size(); i++) {
             Entity e = _entities.get(i);
@@ -49,6 +51,7 @@ public class InputSystem extends EntitySystem {
             renComp = rc.get(e);
             posComp = pc.get(e);
             texComp = tc.get(e);
+            inputComp = pic.get(e);
 
             // Rotation
             float w = renComp._scale * texComp._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
@@ -83,6 +86,10 @@ public class InputSystem extends EntitySystem {
                 velComp._vel.x = 0f;
                 velComp._vel.y = 0f;
             }
+
+            // Shooting buttons
+            inputComp._hasClickedShootButton = Gdx.input.justTouched();
+            inputComp._isHoldingShootButton = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         }
     }
 

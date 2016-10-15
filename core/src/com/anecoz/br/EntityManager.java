@@ -1,6 +1,7 @@
 package com.anecoz.br;
 
 import com.anecoz.br.components.*;
+import com.anecoz.br.components.weapon.ShootingComponent;
 import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Engine;
@@ -33,7 +34,19 @@ public class EntityManager {
     private void init() {
         initLevelEntity();
         initPlayerEntity();
+        initDebugWeaponEntity();
         initSystems();
+    }
+
+    private void initDebugWeaponEntity() {
+        Entity weapon = new Entity();
+
+        weapon.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(false))
+                .add(new TimerComponent(1000))
+                .add(new FactoryComponent());
+
+        _engine.addEntity(weapon);
     }
 
     private void initLevelEntity() {
@@ -72,11 +85,13 @@ public class EntityManager {
         InputSystem inputSystem = new InputSystem(_cam);
         CameraSystem cameraSystem = new CameraSystem(_cam);
         TiledMapCollisionSystem collisionSystem = new TiledMapCollisionSystem(_tileLayer);
+        WeaponSystem weaponSystem = new WeaponSystem();
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
         _engine.addSystem(inputSystem);
         _engine.addSystem(cameraSystem);
         _engine.addSystem(collisionSystem);
+        _engine.addSystem(weaponSystem);
     }
 }
