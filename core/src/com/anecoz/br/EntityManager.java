@@ -42,7 +42,7 @@ public class EntityManager {
         Entity weapon = new Entity();
 
         weapon.add(new ShootingComponent(30, true))
-                .add(new PickedUpComponent(false))
+                .add(new PickedUpComponent(false, 0))
                 .add(new TimerComponent(1000))
                 .add(new FactoryComponent());
 
