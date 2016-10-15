@@ -87,7 +87,7 @@ public class WeaponSystem extends EntitySystem {
             System.out.println("Shooting with " + shootComp._ammunitionCount + " bullets left!!");
 
             ProjectileBlueprint blueprint = facComp._blueprint;
-            blueprint.setData(inpComp._pos, inpComp._forward);
+            blueprint.setData(inpComp._pos, inpComp._forward, inpComp._rotation);
             ArrayList<Component> compList = blueprint.getComponents();
 
             Entity bullet = new Entity();

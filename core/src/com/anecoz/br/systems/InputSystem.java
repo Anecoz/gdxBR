@@ -68,6 +68,7 @@ public class InputSystem extends EntitySystem {
             renComp._rotation = angle - 90;
             inputComp._forward = new Vector2(tmp);
             inputComp._pos = new Vector2(posComp._pos);
+            inputComp._rotation = angle - 90;
 
             // Crude player input handling
             if (Gdx.input.isKeyPressed(Input.Keys.W))

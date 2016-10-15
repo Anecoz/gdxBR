@@ -6,6 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 
 public interface ProjectileBlueprint {
-    public void setData(Vector2 pos, Vector2 forward);
-    public ArrayList<Component> getComponents();
+    void setData(Vector2 pos, Vector2 forward, float rotation);
+    ArrayList<Component> getComponents();
 }

@@ -14,15 +14,17 @@ import java.util.ArrayList;
 public class BulletProjectileBlueprint implements ProjectileBlueprint {
     public Vector2 _pos;
     public Vector2 _forward;
+    public float _rotation;
     private float _speed = 15.f;
 
     public BulletProjectileBlueprint() {
 
     }
 
-    public void setData(Vector2 pos, Vector2 forward) {
+    public void setData(Vector2 pos, Vector2 forward, float rotation) {
         _pos = pos;
         _forward = forward;
+        _rotation = rotation;
     }
 
     public ArrayList<Component> getComponents() {
@@ -32,7 +34,7 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
         output.add(new VelocityComponent(new Vector2(_forward.x * _speed, _forward.y * _speed)));
         output.add(new TextureComponent(ResourceHandler.BULLET_TEXTURE));
         output.add(new BulletComponent(15));
-        output.add(new RenderComponent(0f, 1.f));
+        output.add(new RenderComponent(_rotation, 1.f));
 
         return output;
     }
