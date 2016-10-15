@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class CameraSystem extends EntitySystem {
     public static float WIN_SIZE_X = 20.0f;
-    public static float WIN_SIZE_Y = 0.0f;
+    public static float WIN_SIZE_Y = 720.f/1280.f * WIN_SIZE_X;
 
     private Vector3 _oldPosition;
     private OrthographicCamera _cam;
@@ -20,7 +20,7 @@ public class CameraSystem extends EntitySystem {
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
     public CameraSystem(OrthographicCamera cam) {
-        float invAr = (float) 600 / (float) 800;  // Has to be changed to variable from config file. WIDTH, HEIGHT
+        float invAr = (float) 720 / (float) 1280;  // Has to be changed to variable from config file. WIDTH, HEIGHT
         WIN_SIZE_Y = invAr * WIN_SIZE_X;
         _cam = cam;
     }

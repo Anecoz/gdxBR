@@ -1,6 +1,7 @@
 package com.anecoz.br.states;
 
 import com.anecoz.br.EntityManager;
+import com.anecoz.br.systems.CameraSystem;
 import com.anecoz.br.utils.ResourceHandler;
 import com.anecoz.br.graphics.Camera;
 
@@ -15,7 +16,7 @@ public class PlayState extends State {
 
     public PlayState(GameStateManager gsm, SpriteBatch sb) {
         super(gsm, sb);
-        _cam.setToOrtho(false, Camera.WIN_SIZE_X, Camera.WIN_SIZE_Y);
+        _cam.setToOrtho(false, CameraSystem.WIN_SIZE_X, CameraSystem.WIN_SIZE_Y);
         init();
     }
 
