@@ -14,11 +14,12 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 
 public class EntityManager {
+    public static float PIX_TO_WORLD_FACTOR;
+
     private Engine _engine;
     private SpriteBatch _sb;
     private OrthographicCamera _cam;
-
-    private float _pixToWorldFactor;
+    private TiledMapTileLayer _tileLayer;
 
     public EntityManager(Engine engine, SpriteBatch sb, OrthographicCamera cam) {
         _engine = engine;
@@ -45,12 +46,12 @@ public class EntityManager {
 
         _engine.addEntity(level);
 
-        TiledMapTileLayer tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
+        _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
 
         // If we ever need this, which we might
         //MAP_WIDTH = tileLayer.getWidth();
         //MAP_HEIGHT = tileLayer.getHeight();
-        _pixToWorldFactor = 1.0f/tileLayer.getTileHeight();
+        PIX_TO_WORLD_FACTOR = 1.0f/_tileLayer.getTileHeight();
     }
 
     private void initPlayerEntity() {
@@ -65,16 +66,16 @@ public class EntityManager {
     }
 
     private void initSystems() {
-        EntityRenderSystem renderSystem = new EntityRenderSystem(_sb, _cam, _pixToWorldFactor);
+        EntityRenderSystem renderSystem = new EntityRenderSystem(_sb, _cam);
         TiledMapRenderSystem tiledRenderSystem = new TiledMapRenderSystem(_sb, _cam);
-        InputSystem inputSystem = new InputSystem(_cam, _pixToWorldFactor);
+        InputSystem inputSystem = new InputSystem(_cam);
         CameraSystem cameraSystem = new CameraSystem(_cam);
-        MovementSystem movementSystem = new MovementSystem();
+        TiledMapCollisionSystem collisionSystem = new TiledMapCollisionSystem(_tileLayer);
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
         _engine.addSystem(inputSystem);
         _engine.addSystem(cameraSystem);
-        _engine.addSystem(movementSystem);
+        _engine.addSystem(collisionSystem);
     }
 }

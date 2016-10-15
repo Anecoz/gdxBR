@@ -1,5 +1,6 @@
 package com.anecoz.br.systems;
 
+import com.anecoz.br.*;
 import com.anecoz.br.components.*;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -12,7 +13,6 @@ import com.badlogic.gdx.math.Vector3;
 public class InputSystem extends EntitySystem {
     private float _speed = 3.f;
     private OrthographicCamera _cam;
-    private float _pixToWorldFactor;
 
     private ImmutableArray<Entity> _entities;
 
@@ -21,9 +21,8 @@ public class InputSystem extends EntitySystem {
     private ComponentMapper<PositionComponent> pc = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> tc = ComponentMapper.getFor(TextureComponent.class);
 
-    public InputSystem(OrthographicCamera cam, float factor) {
+    public InputSystem(OrthographicCamera cam) {
         _cam = cam;
-        _pixToWorldFactor = factor;
     }
 
     @Override
@@ -52,8 +51,8 @@ public class InputSystem extends EntitySystem {
             texComp = tc.get(e);
 
             // Rotation
-            float w = renComp._scale * texComp._texture.getWidth() * _pixToWorldFactor;
-            float h = renComp._scale * texComp._texture.getHeight() * _pixToWorldFactor;
+            float w = renComp._scale * texComp._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
+            float h = renComp._scale * texComp._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
             float mouseX = Gdx.input.getX();
             float mouseY = Gdx.input.getY();
             float centerX = posComp._pos.x + w/2.0f;

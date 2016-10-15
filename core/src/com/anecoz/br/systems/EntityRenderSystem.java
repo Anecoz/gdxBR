@@ -1,6 +1,7 @@
 package com.anecoz.br.systems;
 
 
+import com.anecoz.br.*;
 import com.anecoz.br.components.PositionComponent;
 import com.anecoz.br.components.RenderComponent;
 import com.anecoz.br.components.TextureComponent;
@@ -14,16 +15,14 @@ public class EntityRenderSystem extends EntitySystem {
 
     private SpriteBatch _sb;
     private OrthographicCamera _cam;
-    private float _pixToWorldFactor;
 
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
     private ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
 
-    public EntityRenderSystem(SpriteBatch sb, OrthographicCamera cam, float factor) {
+    public EntityRenderSystem(SpriteBatch sb, OrthographicCamera cam) {
         _sb = sb;
         _cam = cam;
-        _pixToWorldFactor = factor;
     }
 
     @Override
@@ -48,8 +47,8 @@ public class EntityRenderSystem extends EntitySystem {
             texComponent = tm.get(e);
             renComponent = rm.get(e);
 
-            float w = renComponent._scale * texComponent._texture.getWidth() * _pixToWorldFactor;
-            float h = renComponent._scale * texComponent._texture.getHeight() * _pixToWorldFactor;
+            float w = renComponent._scale * texComponent._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
+            float h = renComponent._scale * texComponent._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
 
             _sb.draw(texComponent._texture,
                     posComponent._pos.x, posComponent._pos.y,
