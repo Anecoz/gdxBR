@@ -38,8 +38,8 @@ public class Camera extends OrthographicCamera {
             cameraPosition.y = clamp(cameraPosition.y,
                     Level.getBounds().y + WIN_SIZE_Y * 0.5f,
                     Level.getBounds().height - WIN_SIZE_Y * 0.5f);
-            cameraPosition.x = (float) Math.round(cameraPosition.x * 100) / 100;
-            cameraPosition.y = (float) Math.round(cameraPosition.y * 100) / 100;
+            cameraPosition.x = (float) round(cameraPosition.x * 100) / 100;
+            cameraPosition.y = (float) round(cameraPosition.y * 100) / 100;
             this.position.set(cameraPosition);
             oldPosition = this.position;
         }

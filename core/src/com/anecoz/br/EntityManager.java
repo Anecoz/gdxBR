@@ -15,6 +15,8 @@ import com.badlogic.gdx.math.Vector2;
 
 public class EntityManager {
     public static float PIX_TO_WORLD_FACTOR;
+    public static float MAP_WIDTH;
+    public static float MAP_HEIGHT;
 
     private Engine _engine;
     private SpriteBatch _sb;
@@ -48,9 +50,8 @@ public class EntityManager {
 
         _tileLayer = (TiledMapTileLayer)map.getLayers().get(0);
 
-        // If we ever need this, which we might
-        //MAP_WIDTH = tileLayer.getWidth();
-        //MAP_HEIGHT = tileLayer.getHeight();
+        MAP_WIDTH = _tileLayer.getWidth();
+        MAP_HEIGHT = _tileLayer.getHeight();
         PIX_TO_WORLD_FACTOR = 1.0f/_tileLayer.getTileHeight();
     }
 
