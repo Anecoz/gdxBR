@@ -39,11 +39,14 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
         pos.x = pos.x - w/2.0f;
         pos.y = pos.y - h/2.0f;
 
+        RenderComponent renComp = new RenderComponent(_rotation, scale);
+        renComp._bin = -1;
+
         output.add(new PositionComponent(pos));
         output.add(new VelocityComponent(new Vector2(_forward.x * _speed, _forward.y * _speed)));
         output.add(new TextureComponent(ResourceHandler.BULLET_TEXTURE));
         output.add(new BulletComponent(15));
-        output.add(new RenderComponent(_rotation, scale));
+        output.add(renComp);
         output.add(new ProjectileComponent());
 
         return output;

@@ -47,13 +47,13 @@ public class EntityManager {
         Entity weapon4 = new Entity();
         Entity weapon5 = new Entity();
 
-        weapon1.add(new ShootingComponent(30, true))
+        weapon1.add(new ShootingComponent(10000, true))
                 .add(new PickedUpComponent(true))
-                .add(new TimerComponent(300))
+                .add(new TimerComponent(800))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
-                .add(new RenderComponent(0f, 0.03125f))
+                .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)));
         weapon2.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
@@ -61,7 +61,7 @@ public class EntityManager {
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
-                .add(new RenderComponent(0f, 0.03125f))
+                .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)));
         weapon3.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
@@ -69,7 +69,7 @@ public class EntityManager {
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
-                .add(new RenderComponent(0f, 0.03125f))
+                .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)));
         weapon4.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
@@ -77,7 +77,7 @@ public class EntityManager {
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
-                .add(new RenderComponent(0f, 0.03125f))
+                .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)));
         weapon5.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
@@ -85,7 +85,7 @@ public class EntityManager {
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
-                .add(new RenderComponent(0f, 0.03125f))
+                .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)));
 
         _engine.addEntity(weapon1);
@@ -132,7 +132,7 @@ public class EntityManager {
         inventory.add(new InventoryComponent())
                 .add(new TextureComponent(ResourceHandler.INVENTORY_TEXTURE))
                 .add(new PositionComponent(new Vector2(10, 10)))
-                .add(new RenderComponent(0f, 0.3f));
+                .add(new RenderComponent(0f, 0.3f, 1));
         _engine.addEntity(inventory);
     }
 

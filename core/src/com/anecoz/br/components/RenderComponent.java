@@ -13,4 +13,10 @@ public class RenderComponent implements Component {
         _scale = scale;
         _bin = 0;
     }
+
+    public RenderComponent(float rotation, float scale, int bin) {
+        _rotation = rotation;
+        _scale = scale;
+        _bin = bin;
+    }
 }
