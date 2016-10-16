@@ -5,6 +5,7 @@ import com.anecoz.br.components.RenderComponent;
 import com.anecoz.br.components.TextureComponent;
 import com.anecoz.br.components.VelocityComponent;
 import com.anecoz.br.components.weapon.BulletComponent;
+import com.anecoz.br.components.weapon.ProjectileComponent;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -35,6 +36,7 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
         output.add(new TextureComponent(ResourceHandler.BULLET_TEXTURE));
         output.add(new BulletComponent(15));
         output.add(new RenderComponent(_rotation, .3f));
+        output.add(new ProjectileComponent());
 
         return output;
     }

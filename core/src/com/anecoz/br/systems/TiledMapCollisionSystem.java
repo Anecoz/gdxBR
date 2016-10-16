@@ -2,12 +2,14 @@ package com.anecoz.br.systems;
 
 import com.anecoz.br.*;
 import com.anecoz.br.components.*;
+import com.anecoz.br.components.weapon.ProjectileComponent;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
 public class TiledMapCollisionSystem extends EntitySystem {
+    private Engine _engine;
     private TiledMapTileLayer _tileLayer;
     private ImmutableArray<Entity> _entities;
 
@@ -15,10 +17,9 @@ public class TiledMapCollisionSystem extends EntitySystem {
     private ComponentMapper<VelocityComponent> vm = ComponentMapper.getFor(VelocityComponent.class);
     private ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
+    private ComponentMapper<ProjectileComponent> projMapper = ComponentMapper.getFor(ProjectileComponent.class);
 
     public TiledMapCollisionSystem(TiledMapTileLayer tileLayer) {
-        // Needs a priority HIGHER than that of the movement system (so this gets done after)
-        priority = 2;
         _tileLayer = tileLayer;
     }
 
@@ -30,6 +31,7 @@ public class TiledMapCollisionSystem extends EntitySystem {
                 RenderComponent.class,
                 TextureComponent.class)
                 .get());
+        _engine = engine;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class TiledMapCollisionSystem extends EntitySystem {
             velComp = vm.get(e);
             renComp = rm.get(e);
             texComp = tm.get(e);
+            boolean didCollide = false;
 
             float w = renComp._scale * texComp._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
             float h = renComp._scale * texComp._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
@@ -55,23 +58,36 @@ public class TiledMapCollisionSystem extends EntitySystem {
 
             if (velComp._vel.x > 0) {
                 posComp._pos.x += velComp._vel.x * deltaTime;
-                if (checkCollision(posComp._pos, w, h))
+                if (checkCollision(posComp._pos, w, h)) {
                     posComp._pos.x = tmp.x;
+                    didCollide = true;
+                }
             }
             if (velComp._vel.x < 0) {
                 posComp._pos.x += velComp._vel.x * deltaTime;
-                if (checkCollision(posComp._pos, w, h))
+                if (checkCollision(posComp._pos, w, h)) {
                     posComp._pos.x = tmp.x;
+                    didCollide = true;
+                }
             }
             if (velComp._vel.y > 0) {
                 posComp._pos.y += velComp._vel.y * deltaTime;
-                if (checkCollision(posComp._pos, w, h))
+                if (checkCollision(posComp._pos, w, h)) {
                     posComp._pos.y = tmp.y;
+                    didCollide = true;
+                }
             }
             if (velComp._vel.y < 0) {
                 posComp._pos.y += velComp._vel.y * deltaTime;
-                if (checkCollision(posComp._pos, w, h))
+                if (checkCollision(posComp._pos, w, h)) {
                     posComp._pos.y = tmp.y;
+                    didCollide = true;
+                }
+            }
+
+            // If is projectile, remove from engine
+            if (didCollide && projMapper.has(e)) {
+                _engine.removeEntity(e);
             }
         }
     }
