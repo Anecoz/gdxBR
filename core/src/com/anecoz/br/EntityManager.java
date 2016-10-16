@@ -42,9 +42,10 @@ public class EntityManager {
     private void initDebugWeaponEntity() {
         Entity weapon = new Entity();
 
-        weapon.add(new ShootingComponent(30, true))
+        weapon.add(new ShootingComponent(100, true))
                 .add(new PickedUpComponent(false, 0))
-                .add(new TimerComponent(300))
+                .add(new TimerComponent(700))
+                .add(new TextComponent("Ammo: 100", new Vector2(10, 30)))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()));
 
         _engine.addEntity(weapon);
@@ -70,8 +71,9 @@ public class EntityManager {
     }
 
     private void initPlayerEntity() {
+        Vector2 pos = new Vector2(2, 2);
         Entity player = new Entity();
-        player.add(new PositionComponent(new Vector2(2, 2)))
+        player.add(new PositionComponent(pos))
                 .add(new VelocityComponent(new Vector2(0, 0)))
                 .add(new CameraTargetComponent())
                 .add(new TextureComponent(ResourceHandler.PLAYER_TEXTURE))
@@ -87,6 +89,7 @@ public class EntityManager {
         CameraSystem cameraSystem = new CameraSystem(_cam);
         TiledMapCollisionSystem collisionSystem = new TiledMapCollisionSystem(_tileLayer);
         WeaponSystem weaponSystem = new WeaponSystem();
+        TextRenderSystem textSystem = new TextRenderSystem(_sb, _cam);
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
@@ -94,5 +97,6 @@ public class EntityManager {
         _engine.addSystem(cameraSystem);
         _engine.addSystem(collisionSystem);
         _engine.addSystem(weaponSystem);
+        _engine.addSystem(textSystem);
     }
 }

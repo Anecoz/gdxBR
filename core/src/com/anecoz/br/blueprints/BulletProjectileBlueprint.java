@@ -17,7 +17,7 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
     public Vector2 _pos;
     public Vector2 _forward;
     public float _rotation;
-    private float _speed = 15.f;
+    private float _speed = 60.f;
 
     public BulletProjectileBlueprint() {
 

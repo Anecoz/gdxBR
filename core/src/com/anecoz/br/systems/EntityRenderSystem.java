@@ -5,14 +5,13 @@ import com.anecoz.br.*;
 import com.anecoz.br.components.PositionComponent;
 import com.anecoz.br.components.RenderComponent;
 import com.anecoz.br.components.TextureComponent;
+import com.anecoz.br.utils.RenderBinComparator;
 import com.badlogic.ashley.core.*;
-import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class EntityRenderSystem extends EntitySystem {
-    private ImmutableArray<Entity> _entities;
-
+public class EntityRenderSystem extends SortedIteratingSystem {
     private SpriteBatch _sb;
     private OrthographicCamera _cam;
 
@@ -21,45 +20,42 @@ public class EntityRenderSystem extends EntitySystem {
     private ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
 
     public EntityRenderSystem(SpriteBatch sb, OrthographicCamera cam) {
+        super(Family.all(PositionComponent.class, TextureComponent.class, RenderComponent.class).get(), new RenderBinComparator());
         _sb = sb;
         _cam = cam;
     }
 
     @Override
-    public void addedToEngine(Engine engine) {
-        _entities = engine.getEntitiesFor(Family.all(PositionComponent.class, TextureComponent.class, RenderComponent.class).get());
-    }
-
-    @Override
-    public void update(float deltaTime) {
+    protected void processEntity(Entity e, float deltaTime) {
         PositionComponent posComponent;
         TextureComponent texComponent;
         RenderComponent renComponent;
 
-        _cam.update();
-        _sb.begin();
-        _sb.setProjectionMatrix(_cam.combined);
+        posComponent = pm.get(e);
+        texComponent = tm.get(e);
+        renComponent = rm.get(e);
 
-        for (int i = 0; i < _entities.size(); i++) {
-            Entity e = _entities.get(i);
+        float w = renComponent._scale * texComponent._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
+        float h = renComponent._scale * texComponent._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
 
-            posComponent = pm.get(e);
-            texComponent = tm.get(e);
-            renComponent = rm.get(e);
+        _sb.draw(texComponent._texture,
+                posComponent._pos.x, posComponent._pos.y,
+                w/2.0f, h/2.0f,
+                w, h,
+                1.0f, 1.0f,
+                renComponent._rotation,
+                0, 0,
+                texComponent._texture.getWidth(), texComponent._texture.getHeight(),
+                false, false);
+    }
 
-            float w = renComponent._scale * texComponent._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
-            float h = renComponent._scale * texComponent._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
-
-            _sb.draw(texComponent._texture,
-                    posComponent._pos.x, posComponent._pos.y,
-                    w/2.0f, h/2.0f,
-                    w, h,
-                    1.0f, 1.0f,
-                    renComponent._rotation,
-                    0, 0,
-                    texComponent._texture.getWidth(), texComponent._texture.getHeight(),
-                    false, false);
-        }
-        _sb.end();
+    // Override update method so that we don't have to call cam.update and sb.begin each entity update
+    @Override
+    public void update(float deltaTime) {
+        _cam.update(); //< Want to do this only once
+        _sb.begin();   //< Ditto
+        _sb.setProjectionMatrix(_cam.combined); //< Ditto
+        super.update(deltaTime); //< this will call processEntity above for each entity (but sorted!)
+        _sb.end(); //< end, cause we only want to do it once
     }
 }

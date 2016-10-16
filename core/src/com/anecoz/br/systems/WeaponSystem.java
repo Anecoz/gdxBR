@@ -1,10 +1,7 @@
 package com.anecoz.br.systems;
 
 import com.anecoz.br.blueprints.ProjectileBlueprint;
-import com.anecoz.br.components.ProjectileFactoryComponent;
-import com.anecoz.br.components.PickedUpComponent;
-import com.anecoz.br.components.PlayerInputComponent;
-import com.anecoz.br.components.TimerComponent;
+import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ShootingComponent;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -22,6 +19,7 @@ public class WeaponSystem extends EntitySystem {
     private ComponentMapper<PlayerInputComponent> im = ComponentMapper.getFor(PlayerInputComponent.class);
     private ComponentMapper<TimerComponent> tm = ComponentMapper.getFor(TimerComponent.class);
     private ComponentMapper<PickedUpComponent> pm = ComponentMapper.getFor(PickedUpComponent.class);
+    private ComponentMapper<TextComponent> textMap = ComponentMapper.getFor(TextComponent.class);
     private ComponentMapper<ProjectileFactoryComponent> fm = ComponentMapper.getFor(ProjectileFactoryComponent.class);
 
     public WeaponSystem() {
@@ -34,11 +32,12 @@ public class WeaponSystem extends EntitySystem {
                 ShootingComponent.class,
                 PickedUpComponent.class,
                 TimerComponent.class,
-                ProjectileFactoryComponent.class)
+                ProjectileFactoryComponent.class,
+                TextComponent.class)
                 .get());
 
         _inputEntities = engine.getEntitiesFor(Family.all(PlayerInputComponent.class).get());
-        _engine = engine; //< for adding bullets
+        _engine = engine; //< for adding projectile entities that the factory creates
     }
 
     @Override
@@ -53,6 +52,7 @@ public class WeaponSystem extends EntitySystem {
         TimerComponent timerComp;
         PickedUpComponent pickUpComp;
         ProjectileFactoryComponent facComponent;
+        TextComponent textComp;
 
         for (int i = 0; i < _entities.size(); i++) {
             Entity e = _entities.get(i);
@@ -61,6 +61,7 @@ public class WeaponSystem extends EntitySystem {
             timerComp = tm.get(e);
             pickUpComp = pm.get(e);
             facComponent = fm.get(e);
+            textComp = textMap.get(e);
 
             if (pickUpComp._inInventory)
                 continue;
@@ -78,23 +79,26 @@ public class WeaponSystem extends EntitySystem {
                     shoot(inputComponent, timerComp, shootComp, facComponent);
                 }
             }
+
+            textComp._text = "Ammo: " + Integer.toString(shootComp._ammunitionCount);
         }
     }
 
-    private void shoot(PlayerInputComponent inpComp, TimerComponent timerComp, ShootingComponent shootComp, ProjectileFactoryComponent facComp) {
+    private void shoot(PlayerInputComponent inpComp,
+                       TimerComponent timerComp,
+                       ShootingComponent shootComp,
+                       ProjectileFactoryComponent facComp) {
         if (timerComp._millisSinceLastActivation == -1 ||
                 (TimeUtils.millis()) - timerComp._millisSinceLastActivation >= (long)1000/((float)timerComp._frequency/60)) {
-            System.out.println("Shooting with " + shootComp._ammunitionCount + " bullets left!!");
-
             ProjectileBlueprint blueprint = facComp._blueprint;
             blueprint.setData(inpComp._pos, inpComp._forward, inpComp._rotation);
             ArrayList<Component> compList = blueprint.getComponents();
 
-            Entity bullet = new Entity();
+            Entity projectile = new Entity();
             for (Component comp : compList) {
-                bullet.add(comp);
+                projectile.add(comp);
             }
-            _engine.addEntity(bullet);
+            _engine.addEntity(projectile);
 
             shootComp._ammunitionCount--;
             timerComp._millisSinceLastActivation = TimeUtils.millis();
