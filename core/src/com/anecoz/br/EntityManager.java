@@ -36,19 +36,63 @@ public class EntityManager {
         initLevelEntity();
         initPlayerEntity();
         initDebugWeaponEntity();
+        initInventoryEntity();
         initSystems();
     }
 
     private void initDebugWeaponEntity() {
-        Entity weapon = new Entity();
+        Entity weapon1 = new Entity();
+        Entity weapon2 = new Entity();
+        Entity weapon3 = new Entity();
+        Entity weapon4 = new Entity();
+        Entity weapon5 = new Entity();
 
-        weapon.add(new ShootingComponent(100, true))
-                .add(new PickedUpComponent(true, 0))
-                .add(new TimerComponent(700))
-                .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()));
+        weapon1.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(true))
+                .add(new TimerComponent(300))
+                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
+                .add(new PositionComponent(new Vector2(0,0)))
+                .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
+                .add(new RenderComponent(0f, 0.03125f))
+                .add(new TextComponent("", new Vector2(10, 30)));
+        weapon2.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(false))
+                .add(new TimerComponent(300))
+                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
+                .add(new PositionComponent(new Vector2(0,0)))
+                .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
+                .add(new RenderComponent(0f, 0.03125f))
+                .add(new TextComponent("", new Vector2(10, 30)));
+        weapon3.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(false))
+                .add(new TimerComponent(300))
+                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
+                .add(new PositionComponent(new Vector2(0,0)))
+                .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
+                .add(new RenderComponent(0f, 0.03125f))
+                .add(new TextComponent("", new Vector2(10, 30)));
+        weapon4.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(false))
+                .add(new TimerComponent(300))
+                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
+                .add(new PositionComponent(new Vector2(0,0)))
+                .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
+                .add(new RenderComponent(0f, 0.03125f))
+                .add(new TextComponent("", new Vector2(10, 30)));
+        weapon5.add(new ShootingComponent(30, true))
+                .add(new PickedUpComponent(false))
+                .add(new TimerComponent(300))
+                .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
+                .add(new PositionComponent(new Vector2(0,0)))
+                .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
+                .add(new RenderComponent(0f, 0.03125f))
+                .add(new TextComponent("", new Vector2(10, 30)));
 
-        _engine.addEntity(weapon);
+        _engine.addEntity(weapon1);
+        _engine.addEntity(weapon2);
+        _engine.addEntity(weapon3);
+        _engine.addEntity(weapon4);
+        _engine.addEntity(weapon5);
     }
 
     private void initLevelEntity() {
@@ -82,6 +126,15 @@ public class EntityManager {
         _engine.addEntity(player);
     }
 
+    private void initInventoryEntity() {
+        Entity inventory = new Entity();
+        inventory.add(new InventoryComponent())
+                .add(new TextureComponent(ResourceHandler.INVENTORY_TEXTURE))
+                .add(new PositionComponent(new Vector2(10, 10)))
+                .add(new RenderComponent(0f, 0.3f));
+        _engine.addEntity(inventory);
+    }
+
     private void initSystems() {
         EntityRenderSystem renderSystem = new EntityRenderSystem(_sb, _cam);
         TiledMapRenderSystem tiledRenderSystem = new TiledMapRenderSystem(_sb, _cam);
@@ -90,6 +143,7 @@ public class EntityManager {
         TiledMapCollisionSystem collisionSystem = new TiledMapCollisionSystem(_tileLayer);
         WeaponSystem weaponSystem = new WeaponSystem();
         TextRenderSystem textSystem = new TextRenderSystem(_sb, _cam);
+        InventorySystem inventorySystem = new InventorySystem(_cam);
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
@@ -98,5 +152,6 @@ public class EntityManager {
         _engine.addSystem(collisionSystem);
         _engine.addSystem(weaponSystem);
         _engine.addSystem(textSystem);
+        _engine.addSystem(inventorySystem);
     }
 }

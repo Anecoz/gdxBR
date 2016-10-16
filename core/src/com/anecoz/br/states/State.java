@@ -1,17 +1,18 @@
 package com.anecoz.br.states;
 
 import com.anecoz.br.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class State {
-    protected Camera _cam;
+    protected OrthographicCamera _cam;
     protected Vector3 _mouse;
     protected GameStateManager _gsm;
     protected SpriteBatch _sb;
 
     public State(GameStateManager gsm, SpriteBatch sb){
-        _cam = new Camera();
+        _cam = new OrthographicCamera();
         _gsm = gsm;
         _mouse = new Vector3();
         _sb = sb;
