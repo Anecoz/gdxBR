@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class WeaponSystem extends EntitySystem {
     private ImmutableArray<Entity> _entities;
     private ImmutableArray<Entity> _inputEntities;
+    private ImmutableArray<Entity> _playerEntities;
 
     private Engine _engine;
 
@@ -21,6 +22,7 @@ public class WeaponSystem extends EntitySystem {
     private ComponentMapper<PickedUpComponent> pm = ComponentMapper.getFor(PickedUpComponent.class);
     private ComponentMapper<TextComponent> textMap = ComponentMapper.getFor(TextComponent.class);
     private ComponentMapper<ProjectileFactoryComponent> fm = ComponentMapper.getFor(ProjectileFactoryComponent.class);
+    private ComponentMapper<PositionComponent> posMapper = ComponentMapper.getFor(PositionComponent.class);
 
     public WeaponSystem() {
 
@@ -37,6 +39,7 @@ public class WeaponSystem extends EntitySystem {
                 .get());
 
         _inputEntities = engine.getEntitiesFor(Family.all(PlayerInputComponent.class).get());
+        _playerEntities = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
         _engine = engine; //< for adding projectile entities that the factory creates
     }
 
@@ -44,6 +47,9 @@ public class WeaponSystem extends EntitySystem {
     public void update(float deltaTime) {
         Entity inputEntity = _inputEntities.first();
         PlayerInputComponent inputComponent = im.get(inputEntity);
+        Entity playerEntity = _playerEntities.first();
+
+        PositionComponent playerPosComp = posMapper.get(playerEntity);
 
         if (!inputComponent._isHoldingShootButton && !inputComponent._hasClickedShootButton)
             return;
@@ -71,12 +77,12 @@ public class WeaponSystem extends EntitySystem {
 
             if (shootComp._isAutomatic) {
                 if (inputComponent._isHoldingShootButton) {
-                    shoot(inputComponent, timerComp, shootComp, facComponent);
+                    shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
                 }
             }
             else {
                 if (inputComponent._hasClickedShootButton) {
-                    shoot(inputComponent, timerComp, shootComp, facComponent);
+                    shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
                 }
             }
 
@@ -85,13 +91,14 @@ public class WeaponSystem extends EntitySystem {
     }
 
     private void shoot(PlayerInputComponent inpComp,
+                       PositionComponent playerPosComp,
                        TimerComponent timerComp,
                        ShootingComponent shootComp,
                        ProjectileFactoryComponent facComp) {
         if (timerComp._millisSinceLastActivation == -1 ||
                 (TimeUtils.millis()) - timerComp._millisSinceLastActivation >= (long)1000/((float)timerComp._frequency/60)) {
             ProjectileBlueprint blueprint = facComp._blueprint;
-            blueprint.setData(inpComp._pos, inpComp._forward, inpComp._rotation);
+            blueprint.setData(playerPosComp._centerPos, inpComp._forward, inpComp._rotation);
             ArrayList<Component> compList = blueprint.getComponents();
 
             Entity projectile = new Entity();

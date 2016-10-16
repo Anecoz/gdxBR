@@ -122,7 +122,8 @@ public class EntityManager {
                 .add(new CameraTargetComponent())
                 .add(new TextureComponent(ResourceHandler.PLAYER_TEXTURE))
                 .add(new RenderComponent(0f, .45f))
-                .add(new PlayerInputComponent());
+                .add(new PlayerInputComponent())
+                .add(new PlayerComponent());
         _engine.addEntity(player);
     }
 

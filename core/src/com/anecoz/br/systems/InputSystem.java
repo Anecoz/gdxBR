@@ -67,7 +67,7 @@ public class InputSystem extends EntitySystem {
             float angle = tmp.angle();
             renComp._rotation = angle - 90;
             inputComp._forward = new Vector2(tmp);
-            inputComp._pos = new Vector2(centerX, centerY);
+            posComp._centerPos = new Vector2(centerX, centerY);
             inputComp._rotation = angle - 90;
 
             // Crude player input handling
