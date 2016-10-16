@@ -15,12 +15,14 @@ public class InputSystem extends EntitySystem {
     private OrthographicCamera _cam;
 
     private ImmutableArray<Entity> _entities;
+    private ImmutableArray<Entity> _invEntities;
 
     private ComponentMapper<VelocityComponent> vc = ComponentMapper.getFor(VelocityComponent.class);
     private ComponentMapper<RenderComponent> rc = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<PositionComponent> pc = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> tc = ComponentMapper.getFor(TextureComponent.class);
     private ComponentMapper<PlayerInputComponent> pic = ComponentMapper.getFor(PlayerInputComponent.class);
+    private ComponentMapper<VisibilityComponent> vic = ComponentMapper.getFor(VisibilityComponent.class);
 
     public InputSystem(OrthographicCamera cam) {
         _cam = cam;
@@ -34,6 +36,10 @@ public class InputSystem extends EntitySystem {
                 RenderComponent.class,      // To set rotation and get scale
                 PositionComponent.class,    // To update rotation (needed in the maths)
                 TextureComponent.class)     // To get width and height to update rotation (needed in the maths)
+                .get());
+
+        _invEntities = engine.getEntitiesFor(Family
+                .one(InventoryComponent.class, PickedUpComponent.class)
                 .get());
     }
 
@@ -52,6 +58,8 @@ public class InputSystem extends EntitySystem {
             posComp = pc.get(e);
             texComp = tc.get(e);
             inputComp = pic.get(e);
+
+            inputComp._oldMousePosition = new Vector2(inputComp._currentMousePosition.x, inputComp._currentMousePosition.y);
 
             // Rotation
             float w = renComp._scale * texComp._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
@@ -90,9 +98,20 @@ public class InputSystem extends EntitySystem {
                 velComp._vel.y = 0f;
             }
 
-            // Shooting buttons
-            inputComp._hasClickedShootButton = Gdx.input.justTouched();
-            inputComp._isHoldingShootButton = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+            // Mouse buttons and position
+            inputComp._hasClickedMouseButton = Gdx.input.justTouched();
+            inputComp._isHoldingMouseButton = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+            inputComp._currentMousePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+            for (int i = 0; i < _invEntities.size(); i++) {
+                Entity e = _invEntities.get(i);
+                if(vic.has(e))
+                    e.remove(VisibilityComponent.class);
+                else
+                    e.add(new VisibilityComponent());
+            }
         }
     }
 

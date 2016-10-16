@@ -5,6 +5,7 @@ import com.anecoz.br.*;
 import com.anecoz.br.components.PositionComponent;
 import com.anecoz.br.components.RenderComponent;
 import com.anecoz.br.components.TextureComponent;
+import com.anecoz.br.components.VisibilityComponent;
 import com.anecoz.br.utils.RenderBinComparator;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
@@ -20,7 +21,9 @@ public class EntityRenderSystem extends SortedIteratingSystem {
     private ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
 
     public EntityRenderSystem(SpriteBatch sb, OrthographicCamera cam) {
-        super(Family.all(PositionComponent.class, TextureComponent.class, RenderComponent.class).get(), new RenderBinComparator());
+        super(Family.all(
+                PositionComponent.class, TextureComponent.class, RenderComponent.class, VisibilityComponent.class).get(),
+                new RenderBinComparator());
         _sb = sb;
         _cam = cam;
     }

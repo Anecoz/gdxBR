@@ -54,7 +54,8 @@ public class EntityManager {
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
-                .add(new TextComponent("", new Vector2(10, 30)));
+                .add(new TextComponent("", new Vector2(10, 30)))
+                .add(new VisibilityComponent());
         weapon2.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
                 .add(new TimerComponent(300))
@@ -62,7 +63,8 @@ public class EntityManager {
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
-                .add(new TextComponent("", new Vector2(10, 30)));
+                .add(new TextComponent("", new Vector2(10, 30)))
+                .add(new VisibilityComponent());
         weapon3.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
                 .add(new TimerComponent(300))
@@ -70,7 +72,8 @@ public class EntityManager {
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
-                .add(new TextComponent("", new Vector2(10, 30)));
+                .add(new TextComponent("", new Vector2(10, 30)))
+                .add(new VisibilityComponent());
         weapon4.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
                 .add(new TimerComponent(300))
@@ -78,7 +81,8 @@ public class EntityManager {
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
-                .add(new TextComponent("", new Vector2(10, 30)));
+                .add(new TextComponent("", new Vector2(10, 30)))
+                .add(new VisibilityComponent());
         weapon5.add(new ShootingComponent(30, true))
                 .add(new PickedUpComponent(false))
                 .add(new TimerComponent(300))
@@ -86,7 +90,8 @@ public class EntityManager {
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
-                .add(new TextComponent("", new Vector2(10, 30)));
+                .add(new TextComponent("", new Vector2(10, 30)))
+                .add(new VisibilityComponent());
 
         _engine.addEntity(weapon1);
         _engine.addEntity(weapon2);
@@ -123,7 +128,8 @@ public class EntityManager {
                 .add(new TextureComponent(ResourceHandler.PLAYER_TEXTURE))
                 .add(new RenderComponent(0f, .45f))
                 .add(new PlayerInputComponent())
-                .add(new PlayerComponent());
+                .add(new PlayerComponent())
+                .add(new VisibilityComponent());
         _engine.addEntity(player);
     }
 
@@ -132,7 +138,8 @@ public class EntityManager {
         inventory.add(new InventoryComponent())
                 .add(new TextureComponent(ResourceHandler.INVENTORY_TEXTURE))
                 .add(new PositionComponent(new Vector2(10, 10)))
-                .add(new RenderComponent(0f, 0.3f, 1));
+                .add(new RenderComponent(0f, 0.3f, 1))
+                .add(new VisibilityComponent());
         _engine.addEntity(inventory);
     }
 

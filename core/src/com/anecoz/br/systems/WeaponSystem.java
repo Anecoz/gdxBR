@@ -51,7 +51,7 @@ public class WeaponSystem extends EntitySystem {
 
         PositionComponent playerPosComp = posMapper.get(playerEntity);
 
-        if (!inputComponent._isHoldingShootButton && !inputComponent._hasClickedShootButton)
+        if (!inputComponent._isHoldingMouseButton && !inputComponent._hasClickedMouseButton)
             return;
 
         ShootingComponent shootComp;
@@ -76,12 +76,12 @@ public class WeaponSystem extends EntitySystem {
                 continue;
 
             if (shootComp._isAutomatic) {
-                if (inputComponent._isHoldingShootButton) {
+                if (inputComponent._isHoldingMouseButton) {
                     shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
                 }
             }
             else {
-                if (inputComponent._hasClickedShootButton) {
+                if (inputComponent._hasClickedMouseButton) {
                     shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
                 }
             }

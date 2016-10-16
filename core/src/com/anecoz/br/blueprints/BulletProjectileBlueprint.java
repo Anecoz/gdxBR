@@ -1,10 +1,7 @@
 package com.anecoz.br.blueprints;
 
 import com.anecoz.br.EntityManager;
-import com.anecoz.br.components.PositionComponent;
-import com.anecoz.br.components.RenderComponent;
-import com.anecoz.br.components.TextureComponent;
-import com.anecoz.br.components.VelocityComponent;
+import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.BulletComponent;
 import com.anecoz.br.components.weapon.ProjectileComponent;
 import com.anecoz.br.utils.ResourceHandler;
@@ -48,6 +45,7 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
         output.add(new BulletComponent(15));
         output.add(renComp);
         output.add(new ProjectileComponent());
+        output.add(new VisibilityComponent());
 
         return output;
     }

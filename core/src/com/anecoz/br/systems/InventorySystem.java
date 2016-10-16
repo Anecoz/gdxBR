@@ -27,12 +27,15 @@ public class InventorySystem extends EntitySystem{
     @Override
     public void addedToEngine(Engine engine) {
         _invEntity = engine.getEntitiesFor(Family.all(
+                VisibilityComponent.class,
                 InventoryComponent.class,
                 TextureComponent.class,
                 PositionComponent.class,
                 RenderComponent.class).get());
 
-        _itemEntities = engine.getEntitiesFor(Family.all(PickedUpComponent.class).get());
+        _itemEntities = engine.getEntitiesFor(Family.all(
+                PickedUpComponent.class,
+                VisibilityComponent.class).get());
     }
 
     @Override
@@ -85,6 +88,8 @@ public class InventorySystem extends EntitySystem{
                     pickedComp._inventorySlot.x = counterX;
                     pickedComp._inventorySlot.y = counterY;
                 }
+
+
             }
         }
     }
