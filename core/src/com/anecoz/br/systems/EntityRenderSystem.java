@@ -60,7 +60,6 @@ public class EntityRenderSystem extends EntitySystem {
                     texComponent._texture.getWidth(), texComponent._texture.getHeight(),
                     false, false);
         }
-
         _sb.end();
     }
 }

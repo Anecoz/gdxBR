@@ -1,5 +1,6 @@
 package com.anecoz.br.blueprints;
 
+import com.anecoz.br.EntityManager;
 import com.anecoz.br.components.PositionComponent;
 import com.anecoz.br.components.RenderComponent;
 import com.anecoz.br.components.TextureComponent;
@@ -31,11 +32,18 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
     public ArrayList<Component> getComponents() {
         ArrayList<Component> output = new ArrayList<Component>();
 
-        output.add(new PositionComponent(_pos));
+        float scale = .3f;
+        float w = scale * ResourceHandler.BULLET_TEXTURE.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
+        float h = scale * ResourceHandler.BULLET_TEXTURE.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
+        Vector2 pos = new Vector2(_pos);
+        pos.x = pos.x - w/2.0f;
+        pos.y = pos.y - h/2.0f;
+
+        output.add(new PositionComponent(pos));
         output.add(new VelocityComponent(new Vector2(_forward.x * _speed, _forward.y * _speed)));
         output.add(new TextureComponent(ResourceHandler.BULLET_TEXTURE));
         output.add(new BulletComponent(15));
-        output.add(new RenderComponent(_rotation, .3f));
+        output.add(new RenderComponent(_rotation, scale));
         output.add(new ProjectileComponent());
 
         return output;
