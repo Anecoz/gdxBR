@@ -63,7 +63,7 @@ public class WeaponSystem extends EntitySystem {
             facComponent = fm.get(e);
             textComp = textMap.get(e);
 
-            if (pickUpComp._inInventory)
+            if (!pickUpComp._inHands)
                 continue;
 
             if (shootComp._ammunitionCount <= 0)

@@ -43,9 +43,9 @@ public class EntityManager {
         Entity weapon = new Entity();
 
         weapon.add(new ShootingComponent(100, true))
-                .add(new PickedUpComponent(false, 0))
+                .add(new PickedUpComponent(true, 0))
                 .add(new TimerComponent(700))
-                .add(new TextComponent("Ammo: 100", new Vector2(10, 30)))
+                .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()));
 
         _engine.addEntity(weapon);
