@@ -2,6 +2,8 @@ package com.anecoz.br;
 
 import com.anecoz.br.blueprints.BulletProjectileBlueprint;
 import com.anecoz.br.components.*;
+import com.anecoz.br.components.weapon.ReloadTimerComponent;
+import com.anecoz.br.components.weapon.RpmTimerComponent;
 import com.anecoz.br.components.weapon.ShootingComponent;
 import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
@@ -47,45 +49,46 @@ public class EntityManager {
         Entity weapon4 = new Entity();
         Entity weapon5 = new Entity();
 
-        weapon1.add(new ShootingComponent(10000, true))
+        weapon1.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(true))
-                .add(new TimerComponent(800))
+                .add(new RpmTimerComponent(800))
+                .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent());
-        weapon2.add(new ShootingComponent(30, true))
+        weapon2.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
-                .add(new TimerComponent(300))
+                .add(new RpmTimerComponent(300))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent());
-        weapon3.add(new ShootingComponent(30, true))
+        weapon3.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
-                .add(new TimerComponent(300))
+                .add(new RpmTimerComponent(300))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent());
-        weapon4.add(new ShootingComponent(30, true))
+        weapon4.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
-                .add(new TimerComponent(300))
+                .add(new RpmTimerComponent(300))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent());
-        weapon5.add(new ShootingComponent(30, true))
+        weapon5.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
-                .add(new TimerComponent(300))
+                .add(new RpmTimerComponent(300))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))

@@ -102,6 +102,9 @@ public class InputSystem extends EntitySystem {
             inputComp._hasClickedMouseButton = Gdx.input.justTouched();
             inputComp._isHoldingMouseButton = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
             inputComp._currentMousePosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+
+            // Keyboard buttons
+            inputComp._hasClickedReloadButton = Gdx.input.isKeyJustPressed(Input.Keys.R);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
