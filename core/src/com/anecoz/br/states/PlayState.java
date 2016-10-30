@@ -1,6 +1,8 @@
 package com.anecoz.br.states;
 
 import com.anecoz.br.EntityManager;
+import com.anecoz.br.network.client.ClientMasterHandler;
+import com.anecoz.br.network.client.ClientSender;
 import com.anecoz.br.systems.CameraSystem;
 import com.anecoz.br.utils.ResourceHandler;
 import com.anecoz.br.graphics.Camera;
@@ -9,6 +11,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class PlayState extends State {
     private Engine _engine;
@@ -24,6 +27,8 @@ public class PlayState extends State {
         ResourceHandler.init();
         _engine = new Engine();
         _entityManager = new EntityManager(_engine, _sb, _cam);
+        ClientMasterHandler.init();
+        ClientSender.registerPlayer("Anecoz", new Vector2(2, 2));
     }
 
     @Override
@@ -51,6 +56,7 @@ public class PlayState extends State {
     @Override
     public void dispose() {
         ResourceHandler.dispose();
+        ClientSender.disconnectPlayer();
         System.out.println("Play State Disposed");
     }
 }

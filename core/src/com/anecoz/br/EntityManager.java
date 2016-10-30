@@ -5,6 +5,8 @@ import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ReloadTimerComponent;
 import com.anecoz.br.components.weapon.RpmTimerComponent;
 import com.anecoz.br.components.weapon.ShootingComponent;
+import com.anecoz.br.network.client.ClientMasterHandler;
+import com.anecoz.br.network.client.ClientSender;
 import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Engine;
@@ -51,7 +53,7 @@ public class EntityManager {
 
         weapon1.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(true))
-                .add(new RpmTimerComponent(800))
+                .add(new RpmTimerComponent(500))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
@@ -155,6 +157,7 @@ public class EntityManager {
         WeaponSystem weaponSystem = new WeaponSystem();
         TextRenderSystem textSystem = new TextRenderSystem(_sb, _cam);
         InventorySystem inventorySystem = new InventorySystem(_cam);
+        NetworkSystem networkSystem = new NetworkSystem();
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
@@ -164,5 +167,6 @@ public class EntityManager {
         _engine.addSystem(weaponSystem);
         _engine.addSystem(textSystem);
         _engine.addSystem(inventorySystem);
+        _engine.addSystem(networkSystem);
     }
 }
