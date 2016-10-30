@@ -25,6 +25,14 @@ public class ServerSender {
         _server.sendToAllExceptTCP(conn.getID(), up);
     }
 
+    public static void sendNewRotation(int id, float rot, GameConnection conn) {
+        UpdateOtherPlayerRotation up = new UpdateOtherPlayerRotation();
+        up._id = id;
+        up._rotation = rot;
+
+        _server.sendToAllExceptTCP(conn.getID(), up);
+    }
+
     public static void sendAllPlayers(GameConnection playerConn) {
         RegisterCurrentOtherPlayers reg = new RegisterCurrentOtherPlayers();
 

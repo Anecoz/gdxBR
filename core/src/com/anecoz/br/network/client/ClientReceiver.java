@@ -24,6 +24,10 @@ public class ClientReceiver {
         NetworkSystem._pendingPositionUpdates.put(id, pos);
     }
 
+    public static void updateOtherPlayerRotation(float rot, int id) {
+        NetworkSystem._pendingRotationUpdates.put(id, rot);
+    }
+
     public static void addOtherPlayer(int id, Vector2 pos, String displayName) {
         NetworkSystem._pendingPlayersToAdd.put(id, pos);
     }

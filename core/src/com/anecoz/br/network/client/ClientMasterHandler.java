@@ -43,6 +43,10 @@ public class ClientMasterHandler {
                     OtherPlayerDisconnect disc = (OtherPlayerDisconnect)object;
                     disconnectOtherPlayer(disc._id);
                 }
+                else if (object instanceof UpdateOtherPlayerRotation) {
+                    UpdateOtherPlayerRotation up = (UpdateOtherPlayerRotation)object;
+                    updateOtherPlayerRotation(up._rotation, up._id);
+                }
             }
 
             public void disconnected(Connection connection) {

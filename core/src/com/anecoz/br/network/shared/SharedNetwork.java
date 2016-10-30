@@ -11,6 +11,7 @@ public class SharedNetwork {
         Kryo kryo = endPoint.getKryo();
         kryo.register(Vector2.class);
         kryo.register(UpdatePlayerPosition.class);
+        kryo.register(UpdatePlayerRotation.class);
         kryo.register(RegisterPlayerToServer.class);
         kryo.register(DisconnectPlayer.class);
         kryo.register(RegisterOtherPlayer.class);
@@ -19,6 +20,7 @@ public class SharedNetwork {
         kryo.register(String[].class);
         kryo.register(RegisterCurrentOtherPlayers.class);
         kryo.register(UpdateOtherPlayerPosition.class);
+        kryo.register(UpdateOtherPlayerRotation.class);
         kryo.register(OtherPlayerDisconnect.class);
     }
 
@@ -27,6 +29,13 @@ public class SharedNetwork {
     // desc:    Tells the server about our new position
     static public class UpdatePlayerPosition {
         public Vector2 _pos;
+    }
+
+    // FROM:    CLIENT
+    // TO:      SERVER
+    // desc:    Tells the server about our new rotation
+    static public class UpdatePlayerRotation {
+        public float _rotation;
     }
 
     // FROM:    CLIENT
@@ -68,6 +77,14 @@ public class SharedNetwork {
     // desc:    Sent to all (but yourself) to update other positions.
     static public class UpdateOtherPlayerPosition {
         public Vector2 _pos;
+        public int _id;
+    }
+
+    // FROM:    SERVER
+    // TO:      CLIENT
+    // desc:    Sent to all (but yourself) to update other rotation.
+    static public class UpdateOtherPlayerRotation {
+        public float _rotation;
         public int _id;
     }
 

@@ -20,6 +20,12 @@ public class ClientSender {
         _client.sendTCP(up);
     }
 
+    public static void updatePlayerRotation(float rot) {
+        UpdatePlayerRotation up = new UpdatePlayerRotation();
+        up._rotation = rot;
+        _client.sendTCP(up);
+    }
+
     public static void disconnectPlayer() {
         DisconnectPlayer disc = new DisconnectPlayer();
         _client.sendTCP(disc);

@@ -49,6 +49,13 @@ public class BRGameServer {
                     UpdatePlayerPosition up = (UpdatePlayerPosition)object;
                     ServerSender.sendNewPosition(playerId, up._pos, conn);
                 }
+                else if (object instanceof UpdatePlayerRotation) {
+                    if (conn._id == -1)
+                        return;
+
+                    UpdatePlayerRotation up = (UpdatePlayerRotation)object;
+                    ServerSender.sendNewRotation(conn._id, up._rotation, conn);
+                }
                 else if (object instanceof DisconnectPlayer) {
                     if (conn._id == -1)
                         return;
