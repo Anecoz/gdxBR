@@ -60,7 +60,7 @@ public class ClientMasterHandler {
 
         // Simply try to connect (server has to be running)
         try {
-            _client.connect(5000, "localhost", SharedNetwork._port); //85.229.139.37
+            _client.connect(5000, "83.226.195.88", SharedNetwork._port); //83.226.195.88
         }
         catch (IOException e) {
             e.printStackTrace();
