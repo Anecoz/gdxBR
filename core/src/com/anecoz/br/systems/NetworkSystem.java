@@ -1,6 +1,7 @@
 package com.anecoz.br.systems;
 
 
+import com.anecoz.br.*;
 import com.anecoz.br.blueprints.ProjectileBlueprint;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.network.NetworkPlayerComponent;
@@ -9,12 +10,23 @@ import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkSystem extends EntitySystem {
-    public static ConcurrentHashMap<Integer, Vector2> _pendingPlayersToAdd;
+
+    public static class NetworkPlayerInfo {
+        public Vector2 _startPos;
+        public String _displayName;
+        public NetworkPlayerInfo(Vector2 startPos, String displayName) {
+            _startPos = startPos;
+            _displayName = displayName;
+        }
+    }
+
+    public static ConcurrentHashMap<Integer, NetworkPlayerInfo> _pendingPlayersToAdd;
     public static ConcurrentHashMap<Integer, Vector2> _pendingPositionUpdates;
     public static ConcurrentHashMap<Integer, Float> _pendingRotationUpdates;
     public static CopyOnWriteArrayList<ProjectileBlueprint> _pendingProjectiles;
@@ -27,9 +39,10 @@ public class NetworkSystem extends EntitySystem {
     private ComponentMapper<NetworkPlayerComponent> nc = ComponentMapper.getFor(NetworkPlayerComponent.class);
     private ComponentMapper<PositionComponent> pc = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RenderComponent> rc = ComponentMapper.getFor(RenderComponent.class);
+    private ComponentMapper<TextComponent> tc = ComponentMapper.getFor(TextComponent.class);
 
     public NetworkSystem() {
-        _pendingPlayersToAdd = new ConcurrentHashMap<Integer, Vector2>();
+        _pendingPlayersToAdd = new ConcurrentHashMap<Integer, NetworkPlayerInfo>();
         _pendingPositionUpdates = new ConcurrentHashMap<Integer, Vector2>();
         _pendingRotationUpdates = new ConcurrentHashMap<Integer, Float>();
         _pendingProjectiles = new CopyOnWriteArrayList<ProjectileBlueprint>();
@@ -39,7 +52,7 @@ public class NetworkSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         _engine = engine;
-        _entities = engine.getEntitiesFor(Family.all(NetworkPlayerComponent.class, PositionComponent.class, RenderComponent.class).get());
+        _entities = engine.getEntitiesFor(Family.all(TextComponent.class, NetworkPlayerComponent.class, PositionComponent.class, RenderComponent.class).get());
         _playerEntity = engine.getEntitiesFor(Family.all(PlayerComponent.class, PositionComponent.class, RenderComponent.class).get()).first();
     }
 
@@ -48,14 +61,17 @@ public class NetworkSystem extends EntitySystem {
         NetworkPlayerComponent netComp;
         PositionComponent posComp;
         RenderComponent renComp;
+        TextComponent textComp;
 
         // Go through all pending players to add
         for (Integer key : _pendingPlayersToAdd.keySet()) {
             Entity player = new Entity();
-            player.add(new NetworkPlayerComponent(key))
+            NetworkPlayerInfo obj = _pendingPlayersToAdd.get(key);
+            player.add(new NetworkPlayerComponent(key, obj._displayName))
                     .add(new TextureComponent(ResourceHandler.PLAYER_TEXTURE))
-                    .add(new PositionComponent(_pendingPlayersToAdd.get(key)))
+                    .add(new PositionComponent(obj._startPos))
                     .add(new RenderComponent(0, .45f))
+                    .add(new TextComponent(obj._displayName, obj._startPos))
                     .add(new VisibilityComponent());
             _engine.addEntity(player);
         }
@@ -67,10 +83,16 @@ public class NetworkSystem extends EntitySystem {
             netComp = nc.get(e);
             posComp = pc.get(e);
             renComp = rc.get(e);
+            textComp = tc.get(e);
 
             // Check if this entity has a pending update
             if (_pendingPositionUpdates.containsKey(netComp._id)) {
                 posComp._pos = _pendingPositionUpdates.get(netComp._id);
+                // Use camera to update text position also
+                Vector3 projected = EntityManager.getWorldCam().project(new Vector3(posComp._pos.x, posComp._pos.y, 0f));
+                textComp._pos.x = projected.x;
+                textComp._pos.y = projected.y;
+
                 _pendingPositionUpdates.remove(netComp._id);
             }
 

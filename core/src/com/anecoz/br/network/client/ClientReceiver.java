@@ -14,7 +14,8 @@ public class ClientReceiver {
         int count = ids.length;
 
         for (int i = 0; i < count; i++) {
-            NetworkSystem._pendingPlayersToAdd.put(ids[i], positions[i]);
+            NetworkSystem.NetworkPlayerInfo obj = new NetworkSystem.NetworkPlayerInfo(positions[i], names[i]);
+            NetworkSystem._pendingPlayersToAdd.put(ids[i], obj);
         }
     }
 
@@ -31,7 +32,8 @@ public class ClientReceiver {
     }
 
     public static void addOtherPlayer(int id, Vector2 pos, String displayName) {
-        NetworkSystem._pendingPlayersToAdd.put(id, pos);
+        NetworkSystem.NetworkPlayerInfo obj = new NetworkSystem.NetworkPlayerInfo(pos, displayName);
+        NetworkSystem._pendingPlayersToAdd.put(id, obj);
     }
 
     public static void spawnProjectile(SpawnProjectile spawn) {

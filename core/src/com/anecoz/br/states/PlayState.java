@@ -17,23 +17,22 @@ public class PlayState extends State {
     private Engine _engine;
     private EntityManager _entityManager;
 
-    public PlayState(GameStateManager gsm, SpriteBatch sb) {
+    public PlayState(GameStateManager gsm, SpriteBatch sb, String name) {
         super(gsm, sb);
         _cam.setToOrtho(false, CameraSystem.WIN_SIZE_X, CameraSystem.WIN_SIZE_Y);
-        init();
+        init(name);
     }
 
-    private void init() {
+    private void init(String name) {
         ResourceHandler.init();
         _engine = new Engine();
         _entityManager = new EntityManager(_engine, _sb, _cam);
         ClientMasterHandler.init();
-        ClientSender.registerPlayer("Anecoz", new Vector2(2, 2));
+        ClientSender.registerPlayer(name, new Vector2(2, 2));
     }
 
     @Override
     protected void handleInput() {
-        // Exit the playstate with escape
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
             _gsm.set(new MenuState(_gsm, _sb));
         }

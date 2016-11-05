@@ -26,7 +26,7 @@ public class EntityManager {
 
     private Engine _engine;
     private SpriteBatch _sb;
-    private OrthographicCamera _cam;
+    private static OrthographicCamera _cam;
     private TiledMapTileLayer _tileLayer;
 
     public EntityManager(Engine engine, SpriteBatch sb, OrthographicCamera cam) {
@@ -34,6 +34,10 @@ public class EntityManager {
         _sb = sb;
         _cam = cam;
         init();
+    }
+
+    public static OrthographicCamera getWorldCam() {
+        return _cam;
     }
 
     private void init() {
