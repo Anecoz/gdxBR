@@ -5,6 +5,7 @@ import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ReloadTimerComponent;
 import com.anecoz.br.components.weapon.RpmTimerComponent;
 import com.anecoz.br.components.weapon.ShootingComponent;
+import com.anecoz.br.network.client.ClientSender;
 import com.anecoz.br.utils.TimerUtils;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -108,7 +109,7 @@ public class WeaponSystem extends EntitySystem {
                        ProjectileFactoryComponent facComp) {
         if (TimerUtils.timerIsUp(timerComp) && shootComp._currentMagAmmo > 0) {
             ProjectileBlueprint blueprint = facComp._blueprint;
-            blueprint.setData(playerPosComp._centerPos, inpComp._forward, inpComp._rotation);
+            blueprint.setData(playerPosComp._centerPos.add(inpComp._forward), inpComp._forward, inpComp._rotation);
             ArrayList<Component> compList = blueprint.getComponents();
 
             Entity projectile = new Entity();
@@ -120,6 +121,9 @@ public class WeaponSystem extends EntitySystem {
             shootComp._currentMagAmmo--;
             shootComp._ammunitionCount--;
             TimerUtils.updateTimer(timerComp);
+
+            // Tell network we shot
+            ClientSender.spawnProjectile(blueprint);
         }
     }
 

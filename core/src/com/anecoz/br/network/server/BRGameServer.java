@@ -62,6 +62,12 @@ public class BRGameServer {
 
                     ServerSender.disconnectPlayer(conn);
                 }
+                else if (object instanceof SpawnProjectile) {
+                    if (conn._id == -1)
+                        return;
+                    SpawnProjectile spawn = (SpawnProjectile)object;
+                    ServerSender.sendProjectileSpawn(spawn, conn);
+                }
             }
 
             public void disconnected(Connection c) {

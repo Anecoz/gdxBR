@@ -1,5 +1,6 @@
 package com.anecoz.br.network.client;
 
+import com.anecoz.br.blueprints.ProjectileBlueprint;
 import com.badlogic.gdx.math.Vector2;
 
 import static com.anecoz.br.network.client.ClientMasterHandler._client;
@@ -29,5 +30,15 @@ public class ClientSender {
     public static void disconnectPlayer() {
         DisconnectPlayer disc = new DisconnectPlayer();
         _client.sendTCP(disc);
+    }
+
+    public static void spawnProjectile(ProjectileBlueprint blueprint) {
+        SpawnProjectile spawn = new SpawnProjectile();
+        spawn._forward = blueprint.getForward();
+        spawn._pos = blueprint.getPos();
+        spawn._rotation = blueprint.getRotation();
+        spawn._type = blueprint.getType();
+
+        _client.sendTCP(spawn);
     }
 }

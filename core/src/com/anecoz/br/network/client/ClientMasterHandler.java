@@ -47,6 +47,10 @@ public class ClientMasterHandler {
                     UpdateOtherPlayerRotation up = (UpdateOtherPlayerRotation)object;
                     updateOtherPlayerRotation(up._rotation, up._id);
                 }
+                else if (object instanceof SpawnProjectile) {
+                    SpawnProjectile spawn = (SpawnProjectile)object;
+                    spawnProjectile(spawn);
+                }
             }
 
             public void disconnected(Connection connection) {

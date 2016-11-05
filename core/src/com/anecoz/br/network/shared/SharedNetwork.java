@@ -9,7 +9,9 @@ public class SharedNetwork {
 
     static public void register(EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
+        kryo.register(PROJECTILE_TYPE.class);
         kryo.register(Vector2.class);
+        kryo.register(SpawnProjectile.class);
         kryo.register(UpdatePlayerPosition.class);
         kryo.register(UpdatePlayerRotation.class);
         kryo.register(RegisterPlayerToServer.class);
@@ -22,6 +24,20 @@ public class SharedNetwork {
         kryo.register(UpdateOtherPlayerPosition.class);
         kryo.register(UpdateOtherPlayerRotation.class);
         kryo.register(OtherPlayerDisconnect.class);
+    }
+
+    public enum PROJECTILE_TYPE {
+        BULLET
+    }
+
+    // FROM:    CLIENT OR SERVER
+    // TO:      SERVER OR CLIENT
+    // desc:    Tells server/client to spawn a projectile with some data
+    static public class SpawnProjectile {
+        public PROJECTILE_TYPE _type;
+        public Vector2 _pos;
+        public Vector2 _forward;
+        public float _rotation;
     }
 
     // FROM:    CLIENT

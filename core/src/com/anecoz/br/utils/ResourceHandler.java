@@ -10,6 +10,8 @@ public class ResourceHandler {
     public static Texture INVENTORY_TEXTURE;
 
     static public void init() {
+        //PLAYER_TEXTURE = new Texture("debug_white.png");
+        //BULLET_TEXTURE = new Texture("debug_black.png");
         PLAYER_TEXTURE = new Texture("characters/player.png");
         BULLET_TEXTURE = new Texture("weapons/bullet.png");
         RIFLE_TEXTURE = new Texture("weapons/assault_rifle_display.png");

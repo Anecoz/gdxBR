@@ -17,6 +17,10 @@ public class ServerSender {
         _server.sendToAllExceptTCP(conn.getID(), reg);
     }
 
+    public static void sendProjectileSpawn(SpawnProjectile spawn, GameConnection conn) {
+        _server.sendToAllExceptTCP(conn.getID(), spawn);
+    }
+
     public static void sendNewPosition(int id, Vector2 pos, GameConnection conn) {
         UpdateOtherPlayerPosition up = new UpdateOtherPlayerPosition();
         up._id = id;

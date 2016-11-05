@@ -158,6 +158,7 @@ public class EntityManager {
         TextRenderSystem textSystem = new TextRenderSystem(_sb, _cam);
         InventorySystem inventorySystem = new InventorySystem(_cam);
         NetworkSystem networkSystem = new NetworkSystem();
+        ProjectileCollisionSystem projCollSystem = new ProjectileCollisionSystem();
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
@@ -168,5 +169,6 @@ public class EntityManager {
         _engine.addSystem(textSystem);
         _engine.addSystem(inventorySystem);
         _engine.addSystem(networkSystem);
+        _engine.addSystem(projCollSystem);
     }
 }

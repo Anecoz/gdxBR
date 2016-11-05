@@ -4,6 +4,7 @@ import com.anecoz.br.EntityManager;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.BulletComponent;
 import com.anecoz.br.components.weapon.ProjectileComponent;
+import com.anecoz.br.network.shared.SharedNetwork;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
@@ -19,6 +20,14 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
     public BulletProjectileBlueprint() {
 
     }
+
+    public SharedNetwork.PROJECTILE_TYPE getType() {
+        return SharedNetwork.PROJECTILE_TYPE.BULLET;
+    }
+
+    public Vector2 getPos() {return _pos;}
+    public Vector2 getForward() {return _forward;}
+    public float getRotation() {return _rotation;}
 
     public void setData(Vector2 pos, Vector2 forward, float rotation) {
         _pos = pos;
@@ -42,9 +51,8 @@ public class BulletProjectileBlueprint implements ProjectileBlueprint {
         output.add(new PositionComponent(pos));
         output.add(new VelocityComponent(new Vector2(_forward.x * _speed, _forward.y * _speed)));
         output.add(new TextureComponent(ResourceHandler.BULLET_TEXTURE));
-        output.add(new BulletComponent(15));
         output.add(renComp);
-        output.add(new ProjectileComponent());
+        output.add(new ProjectileComponent(15));
         output.add(new VisibilityComponent());
 
         return output;

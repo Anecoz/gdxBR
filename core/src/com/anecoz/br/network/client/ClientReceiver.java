@@ -1,5 +1,7 @@
 package com.anecoz.br.network.client;
 
+import com.anecoz.br.blueprints.BulletProjectileBlueprint;
+import com.anecoz.br.network.shared.SharedNetwork;
 import com.anecoz.br.systems.NetworkSystem;
 import com.badlogic.gdx.math.Vector2;
 
@@ -17,7 +19,7 @@ public class ClientReceiver {
     }
 
     public static void disconnectOtherPlayer(int id) {
-        // TODO
+        NetworkSystem._pendingPlayersToRemove.add(id);
     }
 
     public static void updateOtherPlayerPosition(Vector2 pos, int id) {
@@ -30,5 +32,18 @@ public class ClientReceiver {
 
     public static void addOtherPlayer(int id, Vector2 pos, String displayName) {
         NetworkSystem._pendingPlayersToAdd.put(id, pos);
+    }
+
+    public static void spawnProjectile(SpawnProjectile spawn) {
+        // Check type to know what blueprint to create
+        switch (spawn._type) {
+            case BULLET:
+                BulletProjectileBlueprint blueprint = new BulletProjectileBlueprint();
+                blueprint.setData(spawn._pos, spawn._forward, spawn._rotation);
+                NetworkSystem._pendingProjectiles.add(blueprint);
+                break;
+            default:
+                break;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.anecoz.br.systems;
 import com.anecoz.br.*;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ProjectileComponent;
+import com.anecoz.br.utils.RenderUtils;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -49,10 +50,9 @@ public class TiledMapCollisionSystem extends EntitySystem {
             texComp = tm.get(e);
             boolean didCollide = false;
 
-            float w = renComp._scale * texComp._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR;
-            float h = renComp._scale * texComp._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR;
-            w = w/2.0f;
-            h = h/2.0f;
+            Vector2 worldDims = RenderUtils.getWorldDims(renComp, texComp);
+            float w = worldDims.x/2.0f;
+            float h = worldDims.y/2.0f;
 
             Vector2 tmp = new Vector2(posComp._pos);
 
