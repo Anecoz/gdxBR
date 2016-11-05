@@ -13,6 +13,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
+import java.io.IOException;
+
 public class PlayState extends State {
     private Engine _engine;
     private EntityManager _entityManager;
@@ -34,6 +36,9 @@ public class PlayState extends State {
     @Override
     protected void handleInput() {
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            ClientMasterHandler._client.stop();
+
+            _engine.removeAllEntities();
             _gsm.set(new MenuState(_gsm, _sb));
         }
     }

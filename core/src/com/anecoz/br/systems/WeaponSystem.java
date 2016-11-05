@@ -51,54 +51,56 @@ public class WeaponSystem extends EntitySystem {
 
     @Override
     public void update(float deltaTime) {
-        Entity inputEntity = _inputEntities.first();
-        PlayerInputComponent inputComponent = im.get(inputEntity);
-        Entity playerEntity = _playerEntities.first();
+        if (_inputEntities.size() > 0) {
+            Entity inputEntity = _inputEntities.first();
+            PlayerInputComponent inputComponent = im.get(inputEntity);
+            Entity playerEntity = _playerEntities.first();
 
-        PositionComponent playerPosComp = posMapper.get(playerEntity);
+            PositionComponent playerPosComp = posMapper.get(playerEntity);
 
-        ShootingComponent shootComp;
-        RpmTimerComponent timerComp;
-        ReloadTimerComponent reloadComp;
-        PickedUpComponent pickUpComp;
-        ProjectileFactoryComponent facComponent;
-        TextComponent textComp;
+            ShootingComponent shootComp;
+            RpmTimerComponent timerComp;
+            ReloadTimerComponent reloadComp;
+            PickedUpComponent pickUpComp;
+            ProjectileFactoryComponent facComponent;
+            TextComponent textComp;
 
-        for (int i = 0; i < _entities.size(); i++) {
-            Entity e = _entities.get(i);
+            for (int i = 0; i < _entities.size(); i++) {
+                Entity e = _entities.get(i);
 
-            shootComp = sm.get(e);
-            timerComp = tm.get(e);
-            reloadComp = rm.get(e);
-            pickUpComp = pm.get(e);
-            facComponent = fm.get(e);
-            textComp = textMap.get(e);
+                shootComp = sm.get(e);
+                timerComp = tm.get(e);
+                reloadComp = rm.get(e);
+                pickUpComp = pm.get(e);
+                facComponent = fm.get(e);
+                textComp = textMap.get(e);
 
-            if (!pickUpComp._inHands)
-                continue;
+                if (!pickUpComp._inHands)
+                    continue;
 
-            if (!reloadComp._isReloading) {
-                if (shootComp._isAutomatic) {
-                    if (inputComponent._isHoldingMouseButton) {
-                        shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
+                if (!reloadComp._isReloading) {
+                    if (shootComp._isAutomatic) {
+                        if (inputComponent._isHoldingMouseButton) {
+                            shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
+                        }
+                    }
+                    else {
+                        if (inputComponent._hasClickedMouseButton) {
+                            shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
+                        }
                     }
                 }
-                else {
-                    if (inputComponent._hasClickedMouseButton) {
-                        shoot(inputComponent, playerPosComp, timerComp, shootComp, facComponent);
-                    }
+
+                // Reload
+                if (reloadComp._isReloading) {
+                    updateReloadStatus(reloadComp, shootComp);
                 }
-            }
+                else if (inputComponent._hasClickedReloadButton) {
+                    startReloading(reloadComp, shootComp);
+                }
 
-            // Reload
-            if (reloadComp._isReloading) {
-                updateReloadStatus(reloadComp, shootComp);
+                textComp._text = "Ammo: " + Integer.toString(shootComp._currentMagAmmo) + "/" + Integer.toString(shootComp._ammunitionCount - shootComp._currentMagAmmo);
             }
-            else if (inputComponent._hasClickedReloadButton) {
-                startReloading(reloadComp, shootComp);
-            }
-
-            textComp._text = "Ammo: " + Integer.toString(shootComp._currentMagAmmo) + "/" + Integer.toString(shootComp._ammunitionCount - shootComp._currentMagAmmo);
         }
     }
 
