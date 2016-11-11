@@ -36,6 +36,10 @@ public class ClientReceiver {
         NetworkSystem._pendingPlayersToAdd.put(id, obj);
     }
 
+    public static void updatePlayerHealth(UpdatePlayerHealth up, int id) {
+        NetworkSystem._pendingHealthUpdates.put(id, up._health);
+    }
+
     public static void spawnProjectile(SpawnProjectile spawn) {
         // Check type to know what blueprint to create
         switch (spawn._type) {

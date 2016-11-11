@@ -15,6 +15,12 @@ public class ClientSender {
         _client.sendTCP(reg);
     }
 
+    public static void updatePlayerHealth(float health) {
+        UpdatePlayerHealth up = new UpdatePlayerHealth();
+        up._health = health;
+        _client.sendTCP(up);
+    }
+
     public static void updatePlayerPos(Vector2 pos) {
         UpdatePlayerPosition up = new UpdatePlayerPosition();
         up._pos = pos;

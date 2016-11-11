@@ -1,6 +1,5 @@
 package com.anecoz.br.systems;
 
-import com.anecoz.br.*;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ProjectileComponent;
 import com.anecoz.br.utils.RenderUtils;
@@ -9,7 +8,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 
-public class TiledMapCollisionSystem extends EntitySystem {
+public class CollisionSystem extends EntitySystem {
     private Engine _engine;
     private TiledMapTileLayer _tileLayer;
     private ImmutableArray<Entity> _entities;
@@ -20,7 +19,7 @@ public class TiledMapCollisionSystem extends EntitySystem {
     private ComponentMapper<TextureComponent> tm = ComponentMapper.getFor(TextureComponent.class);
     private ComponentMapper<ProjectileComponent> projMapper = ComponentMapper.getFor(ProjectileComponent.class);
 
-    public TiledMapCollisionSystem(TiledMapTileLayer tileLayer) {
+    public CollisionSystem(TiledMapTileLayer tileLayer) {
         _tileLayer = tileLayer;
     }
 

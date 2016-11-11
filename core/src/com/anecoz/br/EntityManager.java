@@ -5,8 +5,6 @@ import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ReloadTimerComponent;
 import com.anecoz.br.components.weapon.RpmTimerComponent;
 import com.anecoz.br.components.weapon.ShootingComponent;
-import com.anecoz.br.network.client.ClientMasterHandler;
-import com.anecoz.br.network.client.ClientSender;
 import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Engine;
@@ -138,7 +136,8 @@ public class EntityManager {
                 .add(new RenderComponent(0f, .45f))
                 .add(new PlayerInputComponent())
                 .add(new PlayerComponent())
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new HealthComponent(100f));
         _engine.addEntity(player);
     }
 
@@ -157,12 +156,13 @@ public class EntityManager {
         TiledMapRenderSystem tiledRenderSystem = new TiledMapRenderSystem(_sb, _cam);
         InputSystem inputSystem = new InputSystem(_cam);
         CameraSystem cameraSystem = new CameraSystem(_cam);
-        TiledMapCollisionSystem collisionSystem = new TiledMapCollisionSystem(_tileLayer);
+        CollisionSystem collisionSystem = new CollisionSystem(_tileLayer);
         WeaponSystem weaponSystem = new WeaponSystem();
         TextRenderSystem textSystem = new TextRenderSystem(_sb, _cam);
         InventorySystem inventorySystem = new InventorySystem(_cam);
         NetworkSystem networkSystem = new NetworkSystem();
         ProjectileCollisionSystem projCollSystem = new ProjectileCollisionSystem();
+        HealthSystem healthSystem = new HealthSystem();
 
         _engine.addSystem(renderSystem);
         _engine.addSystem(tiledRenderSystem);
@@ -174,5 +174,6 @@ public class EntityManager {
         _engine.addSystem(inventorySystem);
         _engine.addSystem(networkSystem);
         _engine.addSystem(projCollSystem);
+        _engine.addSystem(healthSystem);
     }
 }

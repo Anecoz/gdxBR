@@ -51,6 +51,10 @@ public class ClientMasterHandler {
                     SpawnProjectile spawn = (SpawnProjectile)object;
                     spawnProjectile(spawn);
                 }
+                else if (object instanceof UpdatePlayerHealth) {
+                    UpdatePlayerHealth up = (UpdatePlayerHealth)object;
+                    updatePlayerHealth(up, up._id);
+                }
             }
 
             public void disconnected(Connection connection) {

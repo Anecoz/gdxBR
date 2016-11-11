@@ -68,6 +68,12 @@ public class BRGameServer {
                     SpawnProjectile spawn = (SpawnProjectile)object;
                     ServerSender.sendProjectileSpawn(spawn, conn);
                 }
+                else if (object instanceof UpdatePlayerHealth) {
+                    if (conn._id == -1)
+                        return;
+                    UpdatePlayerHealth up = (UpdatePlayerHealth)object;
+                    ServerSender.sendUpdatePlayerHealth(up, conn);
+                }
             }
 
             public void disconnected(Connection c) {

@@ -12,6 +12,7 @@ public class SharedNetwork {
         kryo.register(PROJECTILE_TYPE.class);
         kryo.register(Vector2.class);
         kryo.register(SpawnProjectile.class);
+        kryo.register(UpdatePlayerHealth.class);
         kryo.register(UpdatePlayerPosition.class);
         kryo.register(UpdatePlayerRotation.class);
         kryo.register(RegisterPlayerToServer.class);
@@ -38,6 +39,14 @@ public class SharedNetwork {
         public Vector2 _pos;
         public Vector2 _forward;
         public float _rotation;
+    }
+
+    // FROM:    CLIENT OR SERVER
+    // TO:      SERVER OR CLIENT
+    // desc:    Update player health
+    static public class UpdatePlayerHealth {
+        public int _id;
+        public float _health;
     }
 
     // FROM:    CLIENT

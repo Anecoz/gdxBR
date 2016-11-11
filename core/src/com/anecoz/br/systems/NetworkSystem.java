@@ -29,6 +29,7 @@ public class NetworkSystem extends EntitySystem {
     public static ConcurrentHashMap<Integer, NetworkPlayerInfo> _pendingPlayersToAdd;
     public static ConcurrentHashMap<Integer, Vector2> _pendingPositionUpdates;
     public static ConcurrentHashMap<Integer, Float> _pendingRotationUpdates;
+    public static ConcurrentHashMap<Integer, Float> _pendingHealthUpdates;
     public static CopyOnWriteArrayList<ProjectileBlueprint> _pendingProjectiles;
     public static CopyOnWriteArrayList<Integer> _pendingPlayersToRemove;
 
@@ -40,11 +41,13 @@ public class NetworkSystem extends EntitySystem {
     private ComponentMapper<PositionComponent> pc = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RenderComponent> rc = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<TextComponent> tc = ComponentMapper.getFor(TextComponent.class);
+    private ComponentMapper<HealthComponent> hc = ComponentMapper.getFor(HealthComponent.class);
 
     public NetworkSystem() {
         _pendingPlayersToAdd = new ConcurrentHashMap<Integer, NetworkPlayerInfo>();
         _pendingPositionUpdates = new ConcurrentHashMap<Integer, Vector2>();
         _pendingRotationUpdates = new ConcurrentHashMap<Integer, Float>();
+        _pendingHealthUpdates = new ConcurrentHashMap<Integer, Float>();
         _pendingProjectiles = new CopyOnWriteArrayList<ProjectileBlueprint>();
         _pendingPlayersToRemove = new CopyOnWriteArrayList<Integer>();
     }
@@ -52,7 +55,7 @@ public class NetworkSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         _engine = engine;
-        _entities = engine.getEntitiesFor(Family.all(TextComponent.class, NetworkPlayerComponent.class, PositionComponent.class, RenderComponent.class).get());
+        _entities = engine.getEntitiesFor(Family.all(HealthComponent.class, TextComponent.class, NetworkPlayerComponent.class, PositionComponent.class, RenderComponent.class).get());
         _playerEntity = engine.getEntitiesFor(Family.all(PlayerComponent.class, PositionComponent.class, RenderComponent.class).get()).first();
     }
 
@@ -62,6 +65,7 @@ public class NetworkSystem extends EntitySystem {
         PositionComponent posComp;
         RenderComponent renComp;
         TextComponent textComp;
+        HealthComponent healthComp;
 
         // Go through all pending players to add
         for (Integer key : _pendingPlayersToAdd.keySet()) {
@@ -72,7 +76,8 @@ public class NetworkSystem extends EntitySystem {
                     .add(new PositionComponent(obj._startPos))
                     .add(new RenderComponent(0, .45f))
                     .add(new TextComponent(obj._displayName, obj._startPos))
-                    .add(new VisibilityComponent());
+                    .add(new VisibilityComponent())
+                    .add(new HealthComponent(100f));
             _engine.addEntity(player);
         }
         _pendingPlayersToAdd.clear();
@@ -84,6 +89,7 @@ public class NetworkSystem extends EntitySystem {
             posComp = pc.get(e);
             renComp = rc.get(e);
             textComp = tc.get(e);
+            healthComp = hc.get(e);
 
             // Check if this entity has a pending update
             if (_pendingPositionUpdates.containsKey(netComp._id)) {
@@ -94,6 +100,11 @@ public class NetworkSystem extends EntitySystem {
                 textComp._pos.y = projected.y;
 
                 _pendingPositionUpdates.remove(netComp._id);
+            }
+
+            if (_pendingHealthUpdates.containsKey(netComp._id)) {
+                healthComp._health = _pendingHealthUpdates.get(netComp._id);
+                _pendingHealthUpdates.remove(netComp._id);
             }
 
             if (_pendingRotationUpdates.containsKey(netComp._id)) {

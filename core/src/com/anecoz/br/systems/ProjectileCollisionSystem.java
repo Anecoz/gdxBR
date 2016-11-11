@@ -16,12 +16,13 @@ public class ProjectileCollisionSystem extends EntitySystem {
 
     private ImmutableArray<Entity> _projectileEntities;
     private ImmutableArray<Entity> _networkPlayerEntities;
-    private Entity _playerEntity;
+    private ImmutableArray<Entity> _playerEntities;
 
     private ComponentMapper<PositionComponent> posMapper = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<TextureComponent> textureMapper = ComponentMapper.getFor(TextureComponent.class);
     private ComponentMapper<RenderComponent> renderMapper = ComponentMapper.getFor(RenderComponent.class);
     private ComponentMapper<ProjectileComponent> projMapper = ComponentMapper.getFor(ProjectileComponent.class);
+    private ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
 
     public ProjectileCollisionSystem() {
 
@@ -36,7 +37,7 @@ public class ProjectileCollisionSystem extends EntitySystem {
                 ProjectileComponent.class,
                 PositionComponent.class).get());
         _networkPlayerEntities = engine.getEntitiesFor(Family.all(RenderComponent.class, NetworkPlayerComponent.class, TextureComponent.class, PositionComponent.class).get());
-        _playerEntity = engine.getEntitiesFor(Family.all(RenderComponent.class, TextureComponent.class, PlayerComponent.class, PositionComponent.class).get()).first();
+        _playerEntities = engine.getEntitiesFor(Family.all(HealthComponent.class, RenderComponent.class, TextureComponent.class, PlayerComponent.class, PositionComponent.class).get());
     }
 
     @Override
@@ -45,19 +46,23 @@ public class ProjectileCollisionSystem extends EntitySystem {
         TextureComponent projTex, playerTex, netPlayerTex;
         RenderComponent projRen, playerRen, netPlayerRen;
         ProjectileComponent projComp;
+        HealthComponent playerHealth = new HealthComponent(-1); // Dummy default
 
-        playerPos = posMapper.get(_playerEntity);
-        playerTex = textureMapper.get(_playerEntity);
-        playerRen = renderMapper.get(_playerEntity);
+        Rectangle playerRectangle = new Rectangle(); // Dummy default
+        if (_playerEntities.size() > 0) {
+            playerPos = posMapper.get(_playerEntities.first());
+            playerTex = textureMapper.get(_playerEntities.first());
+            playerRen = renderMapper.get(_playerEntities.first());
+            playerHealth = healthMapper.get(_playerEntities.first());
+            Vector2 playerWorldDims = RenderUtils.getWorldDims(playerRen, playerTex);
+            // Get a somewhat smaller bounding box
+            float x = playerPos._pos.x + playerWorldDims.x/4.0f;
+            float y = playerPos._pos.y + playerWorldDims.y/4.0f;
+            float w = playerWorldDims.x/2.0f;
+            float h = playerWorldDims.y/2.0f;
 
-        Vector2 playerWorldDims = RenderUtils.getWorldDims(playerRen, playerTex);
-        // Get a somewhat smaller bounding box
-        float x = playerPos._pos.x + playerWorldDims.x/4.0f;
-        float y = playerPos._pos.y + playerWorldDims.y/4.0f;
-        float w = playerWorldDims.x/2.0f;
-        float h = playerWorldDims.y/2.0f;
-
-        Rectangle playerRectangle = new Rectangle(x, y, w, h);
+            playerRectangle = new Rectangle(x, y, w, h);
+        }
 
         Rectangle projRectangle = new Rectangle();
         Vector2 projWorldDims;
@@ -75,9 +80,12 @@ public class ProjectileCollisionSystem extends EntitySystem {
             projRectangle.width = projWorldDims.x;
             projRectangle.height = projWorldDims.y;
 
-            if (CollisionUtils.AABBCollision(projRectangle, playerRectangle)) {
-                System.out.println("Applying " + projComp._damage + " damage to player!");
-                _engine.removeEntity(e);
+            if (_playerEntities.size() > 0) {
+                if (CollisionUtils.AABBCollision(projRectangle, playerRectangle)) {
+                    System.out.println("Applying " + projComp._damage + " damage to player!");
+                    playerHealth._health -= projComp._damage;
+                    _engine.removeEntity(e);
+                }
             }
 
             // Loop over networked players
