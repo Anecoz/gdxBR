@@ -38,8 +38,9 @@ public class InputSystem extends EntitySystem {
                 TextureComponent.class)     // To get width and height to update rotation (needed in the maths)
                 .get());
 
-        _invEntities = engine.getEntitiesFor(Family
-                .one(InventoryComponent.class, PickedUpComponent.class)
+        _invEntities = engine.getEntitiesFor(Family.one(
+                InventoryComponent.class,
+                PickedUpComponent.class)
                 .get());
     }
 

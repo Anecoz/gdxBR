@@ -75,8 +75,10 @@ public class WeaponSystem extends EntitySystem {
                 facComponent = fm.get(e);
                 textComp = textMap.get(e);
 
-                if (!pickUpComp._inHands)
+                if (!pickUpComp._inHands) {
+                    textComp._text = "";
                     continue;
+                }
 
                 if (!reloadComp._isReloading) {
                     if (shootComp._isAutomatic) {

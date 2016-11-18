@@ -62,43 +62,52 @@ public class EntityManager {
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon2.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
                 .add(new RpmTimerComponent(300))
+                .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon3.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
                 .add(new RpmTimerComponent(300))
+                .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon4.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
                 .add(new RpmTimerComponent(300))
+                .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon5.add(new ShootingComponent(80, 40, 40, true))
                 .add(new PickedUpComponent(false))
                 .add(new RpmTimerComponent(300))
+                .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
                 .add(new PositionComponent(new Vector2(0,0)))
                 .add(new TextureComponent(ResourceHandler.RIFLE_TEXTURE))
                 .add(new RenderComponent(0f, 0.03125f, 2))
                 .add(new TextComponent("", new Vector2(10, 30)))
-                .add(new VisibilityComponent());
+                .add(new VisibilityComponent())
+                .add(new BoundingBoxComponent(new Vector2(0,0)));
 
         _engine.addEntity(weapon1);
         _engine.addEntity(weapon2);
