@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -18,13 +19,14 @@ public class InventorySystem extends EntitySystem{
     private Entity _selectedEntity;
     private PlayerInputComponent _playerInputComponent;
 
-    private final int SLOT_SIZE = 128; // Size of a slow in pixels (to scale images properly)
+    private final int SLOT_SIZE = 128; // Size of a slot in pixels (to scale images properly)
     private final int INV_SIZE = 4; // Actually 4x4
 
     private ImmutableArray<Entity> _inputEntities;
     private ImmutableArray<Entity> _invEntity;
     private ImmutableArray<Entity> _itemEntities;
     private ImmutableArray<Entity> _boundingBoxEntities;
+    private ImmutableArray<Entity> _playerEntities;
 
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private ComponentMapper<RenderComponent> rm = ComponentMapper.getFor(RenderComponent.class);
@@ -56,6 +58,7 @@ public class InventorySystem extends EntitySystem{
                 BoundingBoxComponent.class).get());
 
         _inputEntities = engine.getEntitiesFor(Family.all(PlayerInputComponent.class).get());
+        _playerEntities = engine.getEntitiesFor(Family.all(PlayerComponent.class).get());
     }
 
     @Override
@@ -91,7 +94,7 @@ public class InventorySystem extends EntitySystem{
                 posCompInvItems = pm.get(invItem);
                 pickedComp = pum.get(invItem);
                 if (pickedComp._isDragging) {
-                    updateDraggedItem(pickedComp, posCompInvItems);
+                    updateDraggedItem(invItem, pickedComp, posCompInvItems);
                     continue;
                 }
 
@@ -116,12 +119,24 @@ public class InventorySystem extends EntitySystem{
     }
 
     private void updateEquipment() {
-        if (!_playerInputComponent._isDraggingItem)
-            dragAndDrop();
+        dragAndDrop();
     }
 
-    private void updateDraggedItem(PickedUpComponent pickComp, PositionComponent posComp) {
+    private void updateDraggedItem(Entity item, PickedUpComponent pickComp, PositionComponent posComp) {
         if (!_playerInputComponent._isHoldingMouseButton) {
+            if (_playerInputComponent._isDraggingItem) {
+                if (!insideInventory()) {
+                    // Drop at player's feet
+                    Entity player = _playerEntities.first();
+                    PositionComponent playerPos = pm.get(player);
+                    RenderComponent renComp = rm.get(item);
+                    renComp._bin = -1;
+                    posComp._pos.x = playerPos._pos.x;
+                    posComp._pos.y = playerPos._pos.y;
+                    item.remove(PickedUpComponent.class);
+                    item.remove(BoundingBoxComponent.class);
+                }
+            }
             pickComp._isDragging = false;
             _playerInputComponent._isDraggingItem = false;
         }
@@ -134,6 +149,8 @@ public class InventorySystem extends EntitySystem{
     }
 
     private void dragAndDrop() {
+        if (_playerInputComponent._isDraggingItem)
+            return;
         PickedUpComponent pickedUpComponent;
         if (insideBoundingBox() && vm.has(_selectedEntity)) {
             if (_playerInputComponent._isHoldingMouseButton) {
@@ -144,11 +161,29 @@ public class InventorySystem extends EntitySystem{
         }
     }
 
+    private boolean insideInventory() {
+        Entity inventory = _invEntity.first();
+        PositionComponent posComp = pm.get(inventory);
+        RenderComponent renComp = rm.get(inventory);
+        TextureComponent texComp = tm.get(inventory);
+
+        Rectangle bbox = new Rectangle();
+        bbox.setPosition(posComp._pos.x, posComp._pos.y);
+        bbox.setHeight(texComp._texture.getHeight() * renComp._scale * EntityManager.PIX_TO_WORLD_FACTOR);
+        bbox.setWidth(texComp._texture.getWidth() * renComp._scale * EntityManager.PIX_TO_WORLD_FACTOR);
+        Vector3 mPos = EntityManager.getWorldCam().unproject(new Vector3(_playerInputComponent._currentMousePosition.x,
+                _playerInputComponent._currentMousePosition.y, 0));
+        return bbox.contains(mPos.x, mPos.y);
+
+    }
+
     private boolean insideBoundingBox() {
         BoundingBoxComponent boxComponent;
 
         for (int i = 0; i < _boundingBoxEntities.size(); i++) {
             Entity e = _boundingBoxEntities.get(i);
+            if (!bbm.has(e))
+                continue;
             boxComponent = bbm.get(e);
             Vector3 mPos = EntityManager.getWorldCam().unproject(new Vector3(_playerInputComponent._currentMousePosition.x,
                     _playerInputComponent._currentMousePosition.y, 0));

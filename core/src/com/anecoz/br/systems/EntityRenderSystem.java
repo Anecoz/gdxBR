@@ -58,6 +58,7 @@ public class EntityRenderSystem extends SortedIteratingSystem {
         _cam.update(); //< Want to do this only once
         _sb.begin();   //< Ditto
         _sb.setProjectionMatrix(_cam.combined); //< Ditto
+        forceSort();
         super.update(deltaTime); //< this will call processEntity above for each entity (but sorted!)
         _sb.end(); //< end, cause we only want to do it once
     }
