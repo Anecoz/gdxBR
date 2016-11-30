@@ -18,6 +18,9 @@ public class InventorySystem extends EntitySystem{
     private Entity _selectedEntity;
     private PlayerInputComponent _playerInputComponent;
 
+    private final int SLOT_SIZE = 128; // Size of a slow in pixels (to scale images properly)
+    private final int INV_SIZE = 4; // Actually 4x4
+
     private ImmutableArray<Entity> _inputEntities;
     private ImmutableArray<Entity> _invEntity;
     private ImmutableArray<Entity> _itemEntities;
@@ -32,6 +35,7 @@ public class InventorySystem extends EntitySystem{
     private ComponentMapper<PlayerInputComponent> pim = ComponentMapper.getFor(PlayerInputComponent.class);
 
     public InventorySystem(OrthographicCamera camera){
+        priority = 9; // Do this before weapon system
         _cam = camera;
     }
 
@@ -65,11 +69,6 @@ public class InventorySystem extends EntitySystem{
         TextureComponent textCompInv;
         BoundingBoxComponent boxComponent;
 
-        Vector2 invOffset = new Vector2(3.5f, -2f);
-        float x, y;
-        int counterX = 0;
-        int counterY = 0;
-
         // Get PlayerInputComponent
         if (_inputEntities.size() > 0) {
             Entity inputEntity = _inputEntities.first();
@@ -77,6 +76,7 @@ public class InventorySystem extends EntitySystem{
         }
 
         // Inventory
+        Vector2 invOffset = new Vector2(0f, 0f);
         for (int i = 0; i < _invEntity.size(); i++) {
             Entity inv = _invEntity.get(i);
             posCompInv = pm.get(inv);
@@ -85,70 +85,61 @@ public class InventorySystem extends EntitySystem{
 
             posCompInv._pos.set(_cam.position.x + invOffset.x, _cam.position.y + invOffset.y);
 
-            int maxItemsPerRow = (int)(rendCompInv._scale * textCompInv._texture.getWidth()) / (int)(1f/EntityManager.PIX_TO_WORLD_FACTOR);
-
-            // Items in inventory
-            for (int j = 0; j < _itemEntities.size(); j++) {
-                Entity item = _itemEntities.get(j);
-                posCompInvItems = pm.get(item);
-                rendCompItems = rm.get(item);
-                textCompItems = tm.get(item);
-                pickedComp = pum.get(item);
-                boxComponent = bbm.get(item);
-
-                if(counterX < maxItemsPerRow) {
-                    x = posCompInv._pos.x + (rendCompItems._scale * textCompItems._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR) * counterX;
-                    y = posCompInv._pos.y + (rendCompItems._scale * textCompItems._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR) * counterY;
-                    posCompInvItems._pos.set(x, y);
-                    boxComponent._boundingBox.setPosition(x, y);
-                    pickedComp._inventorySlot.x = counterX;
-                    pickedComp._inventorySlot.y = counterY;
-                    counterX++;
-                } else {
-                    counterY++;
-                    counterX = 0;
-                    x = posCompInv._pos.x + (rendCompItems._scale * textCompItems._texture.getWidth() * EntityManager.PIX_TO_WORLD_FACTOR) * counterX;
-                    y = posCompInv._pos.y + (rendCompItems._scale * textCompItems._texture.getHeight() * EntityManager.PIX_TO_WORLD_FACTOR) * counterY;
-                    posCompInvItems._pos.set(x, y);
-                    boxComponent._boundingBox.setPosition(x, y);
-                    pickedComp._inventorySlot.x = counterX;
-                    pickedComp._inventorySlot.y = counterY;
+            // Put items render comps in correct slot
+            for (Entity invItem : _itemEntities)
+            {
+                posCompInvItems = pm.get(invItem);
+                pickedComp = pum.get(invItem);
+                if (pickedComp._isDragging) {
+                    updateDraggedItem(pickedComp, posCompInvItems);
+                    continue;
                 }
+
+                boxComponent = bbm.get(invItem);
+                float adjustedSlotSize = (float)SLOT_SIZE * rendCompInv._scale;
+                rendCompItems = rm.get(invItem);
+                textCompItems = tm.get(invItem);
+                float scale = adjustedSlotSize/(float)textCompItems._texture.getHeight();
+                if (textCompItems._texture.getHeight() < adjustedSlotSize) {
+                    scale = 1f/scale;
+                }
+                rendCompItems._scale = scale;
+
+                int slotY = (int)Math.floor((double)pickedComp._inventorySlot / (double)INV_SIZE);
+                int slotX = pickedComp._inventorySlot - INV_SIZE*slotY;
+                posCompInvItems._pos.x = slotX * adjustedSlotSize * EntityManager.PIX_TO_WORLD_FACTOR + posCompInv._pos.x;
+                posCompInvItems._pos.y = slotY * adjustedSlotSize * EntityManager.PIX_TO_WORLD_FACTOR + posCompInv._pos.y;
+                boxComponent._boundingBox.setPosition(posCompInvItems._pos.x, posCompInvItems._pos.y);
             }
         }
         updateEquipment();
     }
 
     private void updateEquipment() {
-        dragAndDrop();
+        if (!_playerInputComponent._isDraggingItem)
+            dragAndDrop();
+    }
+
+    private void updateDraggedItem(PickedUpComponent pickComp, PositionComponent posComp) {
+        if (!_playerInputComponent._isHoldingMouseButton) {
+            pickComp._isDragging = false;
+            _playerInputComponent._isDraggingItem = false;
+        }
+        else {
+            Vector3 mPos = EntityManager.getWorldCam().unproject(new Vector3(_playerInputComponent._currentMousePosition.x,
+                    _playerInputComponent._currentMousePosition.y, 0));
+            posComp._pos.x = mPos.x;
+            posComp._pos.y = mPos.y;
+        }
     }
 
     private void dragAndDrop() {
         PickedUpComponent pickedUpComponent;
-        PositionComponent positionComponent;
-        BoundingBoxComponent boxComponent;
-        Vector2 oldPosition;
-        if(insideBoundingBox() && vm.has(_selectedEntity)) {
-            positionComponent = pm.get(_selectedEntity);
-            boxComponent = bbm.get(_selectedEntity);
-            oldPosition = new Vector2(positionComponent._pos);
-            Vector3 mPos = EntityManager.getWorldCam().unproject(new Vector3(_playerInputComponent._currentMousePosition.x,
-                    _playerInputComponent._currentMousePosition.y, 0));
-            if(_playerInputComponent._isHoldingMouseButton) {
-                //drag
-                positionComponent._pos.set(mPos.x, mPos.y);
-                boxComponent._boundingBox.setPosition(mPos.x, mPos.y);
-            }
-            else {
-                //reset
-                positionComponent._pos.set(oldPosition);
-                boxComponent._boundingBox.setPosition(oldPosition);
-            }
-
-            if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                removeEquippedWeapon();
+        if (insideBoundingBox() && vm.has(_selectedEntity)) {
+            if (_playerInputComponent._isHoldingMouseButton) {
                 pickedUpComponent = pum.get(_selectedEntity);
-                pickedUpComponent._inHands = true;
+                pickedUpComponent._isDragging = true;
+                _playerInputComponent._isDraggingItem = true;
             }
         }
     }

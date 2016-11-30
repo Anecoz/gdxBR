@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 
 public class PickedUpComponent implements Component {
     public boolean _inHands;
-    public Vector2 _inventorySlot;
+    public boolean _isDragging;
+    public int _inventorySlot;
 
-    public PickedUpComponent(boolean inHands) {
-        _inventorySlot = new Vector2(-1f, -1f);
+    public PickedUpComponent(boolean inHands, int slot) {
+        _inventorySlot = slot;
         _inHands = inHands;
+        _isDragging = false;
     }
 }

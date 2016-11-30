@@ -54,7 +54,7 @@ public class EntityManager {
         Entity weapon5 = new Entity();
 
         weapon1.add(new ShootingComponent(80, 40, 40, true))
-                .add(new PickedUpComponent(true))
+                .add(new PickedUpComponent(true, 0))
                 .add(new RpmTimerComponent(500))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
@@ -65,7 +65,7 @@ public class EntityManager {
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon2.add(new ShootingComponent(80, 40, 40, true))
-                .add(new PickedUpComponent(false))
+                .add(new PickedUpComponent(false, 1))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
@@ -76,7 +76,7 @@ public class EntityManager {
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon3.add(new ShootingComponent(80, 40, 40, true))
-                .add(new PickedUpComponent(false))
+                .add(new PickedUpComponent(false, 2))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
@@ -87,7 +87,7 @@ public class EntityManager {
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon4.add(new ShootingComponent(80, 40, 40, true))
-                .add(new PickedUpComponent(false))
+                .add(new PickedUpComponent(false, 3))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))
@@ -98,7 +98,7 @@ public class EntityManager {
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
         weapon5.add(new ShootingComponent(80, 40, 40, true))
-                .add(new PickedUpComponent(false))
+                .add(new PickedUpComponent(false, 4))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
                 .add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()))

@@ -16,7 +16,7 @@ public class ResourceHandler {
         BULLET_TEXTURE = new Texture("weapons/bullet.png");
         RIFLE_TEXTURE = new Texture("weapons/assault_rifle_display.png");
         BAD_LOGIC_TEXTURE = new Texture("badlogic.jpg");
-        INVENTORY_TEXTURE = new Texture("inventory.png");
+        INVENTORY_TEXTURE = new Texture("inventory2.png");
     }
 
     static public void dispose() {

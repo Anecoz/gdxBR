@@ -30,7 +30,7 @@ public class WeaponSystem extends EntitySystem {
     private ComponentMapper<PositionComponent> posMapper = ComponentMapper.getFor(PositionComponent.class);
 
     public WeaponSystem() {
-
+        priority = 10; // Do this system __after__ inventory system (so we don't shoot when dragging items)
     }
 
     @Override
@@ -54,6 +54,8 @@ public class WeaponSystem extends EntitySystem {
         if (_inputEntities.size() > 0) {
             Entity inputEntity = _inputEntities.first();
             PlayerInputComponent inputComponent = im.get(inputEntity);
+            if (inputComponent._isDraggingItem)
+                return;
             Entity playerEntity = _playerEntities.first();
 
             PositionComponent playerPosComp = posMapper.get(playerEntity);
