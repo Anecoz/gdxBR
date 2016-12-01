@@ -17,6 +17,10 @@ public class ServerSender {
         _server.sendToAllExceptTCP(conn.getID(), reg);
     }
 
+    public static void sendAddWeapon(AddWeapon add, GameConnection conn) {
+        _server.sendToAllExceptTCP(conn.getID(), add);
+    }
+
     public static void sendUpdatePlayerHealth(UpdatePlayerHealth up, GameConnection conn) {
         up._id = conn._id;
         _server.sendToAllExceptTCP(conn.getID(), up);

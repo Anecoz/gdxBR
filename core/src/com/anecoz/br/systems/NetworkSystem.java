@@ -3,6 +3,7 @@ package com.anecoz.br.systems;
 
 import com.anecoz.br.*;
 import com.anecoz.br.blueprints.ProjectileBlueprint;
+import com.anecoz.br.blueprints.WeaponBlueprint;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.network.NetworkPlayerComponent;
 import com.anecoz.br.network.client.ClientSender;
@@ -31,6 +32,7 @@ public class NetworkSystem extends EntitySystem {
     public static ConcurrentHashMap<Integer, Float> _pendingRotationUpdates;
     public static ConcurrentHashMap<Integer, Float> _pendingHealthUpdates;
     public static CopyOnWriteArrayList<ProjectileBlueprint> _pendingProjectiles;
+    public static CopyOnWriteArrayList<WeaponBlueprint> _pendingWeapons;
     public static CopyOnWriteArrayList<Integer> _pendingPlayersToRemove;
 
     private Engine _engine;
@@ -49,6 +51,7 @@ public class NetworkSystem extends EntitySystem {
         _pendingRotationUpdates = new ConcurrentHashMap<Integer, Float>();
         _pendingHealthUpdates = new ConcurrentHashMap<Integer, Float>();
         _pendingProjectiles = new CopyOnWriteArrayList<ProjectileBlueprint>();
+        _pendingWeapons = new CopyOnWriteArrayList<WeaponBlueprint>();
         _pendingPlayersToRemove = new CopyOnWriteArrayList<Integer>();
     }
 
@@ -127,6 +130,16 @@ public class NetworkSystem extends EntitySystem {
             _engine.addEntity(proj);
         }
         _pendingProjectiles.clear();
+
+        // GO through weapons to spawn
+        for (WeaponBlueprint blueprint : _pendingWeapons) {
+            Entity wep = new Entity();
+            for (Component comp : blueprint.getComponents()) {
+                wep.add(comp);
+            }
+            _engine.addEntity(wep);
+        }
+        _pendingWeapons.clear();
 
         // Send updated player position and rotation
         PositionComponent playerPosComp = pc.get(_playerEntity);

@@ -3,6 +3,9 @@ package com.anecoz.br.systems;
 
 import com.anecoz.br.*;
 import com.anecoz.br.components.*;
+import com.anecoz.br.components.weapon.ShootingComponent;
+import com.anecoz.br.network.client.ClientSender;
+import com.anecoz.br.network.shared.SharedNetwork;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
@@ -35,6 +38,7 @@ public class InventorySystem extends EntitySystem{
     private ComponentMapper<BoundingBoxComponent> bbm = ComponentMapper.getFor(BoundingBoxComponent.class);
     private ComponentMapper<VisibilityComponent> vm = ComponentMapper.getFor(VisibilityComponent.class);
     private ComponentMapper<PlayerInputComponent> pim = ComponentMapper.getFor(PlayerInputComponent.class);
+    private ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
 
     public InventorySystem(OrthographicCamera camera){
         priority = 9; // Do this before weapon system
@@ -130,11 +134,13 @@ public class InventorySystem extends EntitySystem{
                     Entity player = _playerEntities.first();
                     PositionComponent playerPos = pm.get(player);
                     RenderComponent renComp = rm.get(item);
+                    ShootingComponent shootComp = sm.get(item);
                     renComp._bin = -1;
                     posComp._pos.x = playerPos._pos.x;
                     posComp._pos.y = playerPos._pos.y;
                     item.remove(PickedUpComponent.class);
                     item.remove(BoundingBoxComponent.class);
+                    ClientSender.dropItem(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, SharedNetwork.WEAPON_TYPE.RIFLE);
                 }
             }
             pickComp._isDragging = false;

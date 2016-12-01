@@ -47,4 +47,13 @@ public class ClientSender {
 
         _client.sendTCP(spawn);
     }
+
+    public static void dropItem(Vector2 pos, int ammo, WEAPON_TYPE type) {
+        AddWeapon add = new AddWeapon();
+        add._ammo = ammo;
+        add._pos = pos;
+        add._type = type;
+
+        _client.sendTCP(add);
+    }
 }

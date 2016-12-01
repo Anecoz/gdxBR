@@ -55,6 +55,10 @@ public class ClientMasterHandler {
                     UpdatePlayerHealth up = (UpdatePlayerHealth)object;
                     updatePlayerHealth(up, up._id);
                 }
+                else if (object instanceof AddWeapon) {
+                    AddWeapon add = (AddWeapon)object;
+                    addWeapon(add);
+                }
             }
 
             public void disconnected(Connection connection) {
@@ -64,7 +68,7 @@ public class ClientMasterHandler {
 
         // Simply try to connect (server has to be running)
         try {
-            _client.connect(5000, "83.226.195.88", SharedNetwork._port); //83.226.195.88
+            _client.connect(5000, "localhost", SharedNetwork._port); //83.226.195.88
         }
         catch (IOException e) {
             e.printStackTrace();

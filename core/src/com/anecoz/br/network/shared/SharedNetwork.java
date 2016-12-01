@@ -10,7 +10,9 @@ public class SharedNetwork {
     static public void register(EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
         kryo.register(PROJECTILE_TYPE.class);
+        kryo.register(WEAPON_TYPE.class);
         kryo.register(Vector2.class);
+        kryo.register(AddWeapon.class);
         kryo.register(SpawnProjectile.class);
         kryo.register(UpdatePlayerHealth.class);
         kryo.register(UpdatePlayerPosition.class);
@@ -29,6 +31,19 @@ public class SharedNetwork {
 
     public enum PROJECTILE_TYPE {
         BULLET
+    }
+
+    public enum WEAPON_TYPE {
+        RIFLE
+    }
+
+    // FROM:    CLIENT OR SERVER
+    // TO:      SERVER OR CLIENT
+    // desc:    Tells server/client to spawn a dropped weapon at a location in the world
+    static public class AddWeapon {
+        public WEAPON_TYPE _type;
+        public int _ammo;
+        public Vector2 _pos;
     }
 
     // FROM:    CLIENT OR SERVER

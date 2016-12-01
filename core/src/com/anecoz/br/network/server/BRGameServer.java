@@ -74,6 +74,12 @@ public class BRGameServer {
                     UpdatePlayerHealth up = (UpdatePlayerHealth)object;
                     ServerSender.sendUpdatePlayerHealth(up, conn);
                 }
+                else if (object instanceof AddWeapon) {
+                    if (conn._id == -1)
+                        return;
+                    AddWeapon add = (AddWeapon)object;
+                    ServerSender.sendAddWeapon(add, conn);
+                }
             }
 
             public void disconnected(Connection c) {

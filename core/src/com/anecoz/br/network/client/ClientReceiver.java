@@ -1,6 +1,7 @@
 package com.anecoz.br.network.client;
 
 import com.anecoz.br.blueprints.BulletProjectileBlueprint;
+import com.anecoz.br.blueprints.RifleWeaponBlueprint;
 import com.anecoz.br.network.shared.SharedNetwork;
 import com.anecoz.br.systems.NetworkSystem;
 import com.badlogic.gdx.math.Vector2;
@@ -47,6 +48,18 @@ public class ClientReceiver {
                 BulletProjectileBlueprint blueprint = new BulletProjectileBlueprint();
                 blueprint.setData(spawn._pos, spawn._forward, spawn._rotation);
                 NetworkSystem._pendingProjectiles.add(blueprint);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public static void addWeapon(AddWeapon add) {
+        switch (add._type) {
+            case RIFLE:
+                RifleWeaponBlueprint blueprint = new RifleWeaponBlueprint();
+                blueprint.setData(add._pos, add._ammo);
+                NetworkSystem._pendingWeapons.add(blueprint);
                 break;
             default:
                 break;
