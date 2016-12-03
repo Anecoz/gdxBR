@@ -59,6 +59,10 @@ public class ClientMasterHandler {
                     AddWeapon add = (AddWeapon)object;
                     addWeapon(add);
                 }
+                else if (object instanceof RemoveItem) {
+                    RemoveItem rem = (RemoveItem)object;
+                    removeItem(rem);
+                }
             }
 
             public void disconnected(Connection connection) {

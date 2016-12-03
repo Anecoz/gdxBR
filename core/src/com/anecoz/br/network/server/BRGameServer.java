@@ -80,6 +80,12 @@ public class BRGameServer {
                     AddWeapon add = (AddWeapon)object;
                     ServerSender.sendAddWeapon(add, conn);
                 }
+                else if (object instanceof RemoveItem) {
+                    if (conn._id == -1)
+                        return;
+                    RemoveItem rem = (RemoveItem)object;
+                    ServerSender.sendRemoveItem(rem, conn);
+                }
             }
 
             public void disconnected(Connection c) {

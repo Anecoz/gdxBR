@@ -6,12 +6,14 @@ import com.anecoz.br.blueprints.ProjectileBlueprint;
 import com.anecoz.br.blueprints.WeaponBlueprint;
 import com.anecoz.br.components.*;
 import com.anecoz.br.components.network.NetworkPlayerComponent;
+import com.anecoz.br.components.weapon.ShootingComponent;
 import com.anecoz.br.network.client.ClientSender;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,9 +36,11 @@ public class NetworkSystem extends EntitySystem {
     public static CopyOnWriteArrayList<ProjectileBlueprint> _pendingProjectiles;
     public static CopyOnWriteArrayList<WeaponBlueprint> _pendingWeapons;
     public static CopyOnWriteArrayList<Integer> _pendingPlayersToRemove;
+    public static CopyOnWriteArrayList<Vector2> _pendingItemsToRemove;
 
     private Engine _engine;
     private ImmutableArray<Entity> _entities;
+    private ImmutableArray<Entity> _itemEntities;
     private Entity _playerEntity;
 
     private ComponentMapper<NetworkPlayerComponent> nc = ComponentMapper.getFor(NetworkPlayerComponent.class);
@@ -53,12 +57,16 @@ public class NetworkSystem extends EntitySystem {
         _pendingProjectiles = new CopyOnWriteArrayList<ProjectileBlueprint>();
         _pendingWeapons = new CopyOnWriteArrayList<WeaponBlueprint>();
         _pendingPlayersToRemove = new CopyOnWriteArrayList<Integer>();
+        _pendingItemsToRemove = new CopyOnWriteArrayList<Vector2>();
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         _engine = engine;
         _entities = engine.getEntitiesFor(Family.all(HealthComponent.class, TextComponent.class, NetworkPlayerComponent.class, PositionComponent.class, RenderComponent.class).get());
+        _itemEntities = engine.getEntitiesFor(
+                Family.all(ShootingComponent.class, VisibilityComponent.class, RenderComponent.class, PositionComponent.class, BoundingBoxComponent.class)
+                .exclude(PickedUpComponent.class).get());
         _playerEntity = engine.getEntitiesFor(Family.all(PlayerComponent.class, PositionComponent.class, RenderComponent.class).get()).first();
     }
 
@@ -120,6 +128,18 @@ public class NetworkSystem extends EntitySystem {
             }
             _pendingPlayersToRemove.clear();
         }
+
+        for (Vector2 posToDel : _pendingItemsToRemove) {
+            for (int j = 0; j < _itemEntities.size(); j++) {
+                Entity item = _itemEntities.get(j);
+                posComp = pc.get(item);
+
+                if (posToDel.dst(posComp._pos) < 1.0) {
+                    _engine.removeEntity(item);
+                }
+            }
+        }
+        _pendingItemsToRemove.clear();
 
         // Go through projectiles to spawn
         for (ProjectileBlueprint blueprint : _pendingProjectiles) {

@@ -12,6 +12,7 @@ public class SharedNetwork {
         kryo.register(PROJECTILE_TYPE.class);
         kryo.register(WEAPON_TYPE.class);
         kryo.register(Vector2.class);
+        kryo.register(RemoveItem.class);
         kryo.register(AddWeapon.class);
         kryo.register(SpawnProjectile.class);
         kryo.register(UpdatePlayerHealth.class);
@@ -35,6 +36,13 @@ public class SharedNetwork {
 
     public enum WEAPON_TYPE {
         RIFLE
+    }
+
+    // FROM:    CLIENT OR SERVER
+    // TO:      SERVER OR CLIENT
+    // desc:    Tells server/client to remove item at a location
+    static public class RemoveItem {
+        public Vector2 _pos;
     }
 
     // FROM:    CLIENT OR SERVER

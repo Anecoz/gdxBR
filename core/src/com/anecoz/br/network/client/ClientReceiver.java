@@ -65,4 +65,8 @@ public class ClientReceiver {
                 break;
         }
     }
+
+    public static void removeItem(RemoveItem rem) {
+        NetworkSystem._pendingItemsToRemove.add(rem._pos);
+    }
 }

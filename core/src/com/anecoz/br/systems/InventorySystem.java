@@ -137,10 +137,10 @@ public class InventorySystem extends EntitySystem{
     private void updateDraggedItem(Entity item, PositionComponent posComp) {
         if (!_playerInputComponent._isHoldingMouseButton) {
             if (_playerInputComponent._isDraggingItem) {
+                Entity player = _playerEntities.first();
+                PositionComponent playerPos = pm.get(player);
                 if (!insideInventory()) {
                     // Drop at player's feet
-                    Entity player = _playerEntities.first();
-                    PositionComponent playerPos = pm.get(player);
                     RenderComponent renComp = rm.get(item);
                     ShootingComponent shootComp = sm.get(item);
                     BoundingBoxComponent bboxComp = bbm.get(item);
@@ -149,7 +149,7 @@ public class InventorySystem extends EntitySystem{
                     posComp._pos.y = playerPos._pos.y;
                     bboxComp._boundingBox.setPosition(new Vector2(playerPos._pos));
                     item.remove(PickedUpComponent.class);
-                    ClientSender.dropItem(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, shootComp._type);
+                    ClientSender.dropWeapon(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, shootComp._type);
                 }
                 else {
                     if (!pum.has(item)) {
@@ -159,6 +159,7 @@ public class InventorySystem extends EntitySystem{
                             RenderComponent renComp = rm.get(item);
                             renComp._bin = 2;
                             item.add(new PickedUpComponent(false, slot));
+                            ClientSender.pickupWeapon(playerPos._pos);
                         }
                     }
                 }
