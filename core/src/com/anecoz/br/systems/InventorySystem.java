@@ -17,6 +17,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
+
 public class InventorySystem extends EntitySystem{
     private OrthographicCamera _cam;
     private Entity _selectedEntity;
@@ -39,6 +41,7 @@ public class InventorySystem extends EntitySystem{
     private ComponentMapper<VisibilityComponent> vm = ComponentMapper.getFor(VisibilityComponent.class);
     private ComponentMapper<PlayerInputComponent> pim = ComponentMapper.getFor(PlayerInputComponent.class);
     private ComponentMapper<ShootingComponent> sm = ComponentMapper.getFor(ShootingComponent.class);
+    private ComponentMapper<DraggingComponent> dm = ComponentMapper.getFor(DraggingComponent.class);
 
     public InventorySystem(OrthographicCamera camera){
         priority = 9; // Do this before weapon system
@@ -55,8 +58,9 @@ public class InventorySystem extends EntitySystem{
                 RenderComponent.class).get());
 
         _itemEntities = engine.getEntitiesFor(Family.all(
-                PickedUpComponent.class,
-                VisibilityComponent.class).get());
+                VisibilityComponent.class)
+                .one(PickedUpComponent.class, DraggingComponent.class)
+                .get());
 
         _boundingBoxEntities = engine.getEntitiesFor(Family.all(
                 BoundingBoxComponent.class).get());
@@ -97,10 +101,13 @@ public class InventorySystem extends EntitySystem{
             {
                 posCompInvItems = pm.get(invItem);
                 pickedComp = pum.get(invItem);
-                if (pickedComp._isDragging) {
-                    updateDraggedItem(invItem, pickedComp, posCompInvItems);
+                if (dm.has(invItem)) {
+                    updateDraggedItem(invItem, posCompInvItems);
                     continue;
                 }
+
+                if (!pum.has(invItem))
+                    continue;
 
                 boxComponent = bbm.get(invItem);
                 float adjustedSlotSize = (float)SLOT_SIZE * rendCompInv._scale;
@@ -127,7 +134,7 @@ public class InventorySystem extends EntitySystem{
         dragAndDrop();
     }
 
-    private void updateDraggedItem(Entity item, PickedUpComponent pickComp, PositionComponent posComp) {
+    private void updateDraggedItem(Entity item, PositionComponent posComp) {
         if (!_playerInputComponent._isHoldingMouseButton) {
             if (_playerInputComponent._isDraggingItem) {
                 if (!insideInventory()) {
@@ -142,10 +149,21 @@ public class InventorySystem extends EntitySystem{
                     posComp._pos.y = playerPos._pos.y;
                     bboxComp._boundingBox.setPosition(new Vector2(playerPos._pos));
                     item.remove(PickedUpComponent.class);
-                    ClientSender.dropItem(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, SharedNetwork.WEAPON_TYPE.RIFLE);
+                    ClientSender.dropItem(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, shootComp._type);
+                }
+                else {
+                    if (!pum.has(item)) {
+                        // We probably just picked up an item off the floor
+                        int slot = getFreeSlot();
+                        if (slot != -1) {
+                            RenderComponent renComp = rm.get(item);
+                            renComp._bin = 2;
+                            item.add(new PickedUpComponent(false, slot));
+                        }
+                    }
                 }
             }
-            pickComp._isDragging = false;
+            item.remove(DraggingComponent.class);
             _playerInputComponent._isDraggingItem = false;
         }
         else {
@@ -159,12 +177,22 @@ public class InventorySystem extends EntitySystem{
     private void dragAndDrop() {
         if (_playerInputComponent._isDraggingItem)
             return;
-        PickedUpComponent pickedUpComponent;
-        if (insideInventory() && insideBoundingBox() && vm.has(_selectedEntity)) {
-            if (_playerInputComponent._isHoldingMouseButton) {
-                pickedUpComponent = pum.get(_selectedEntity);
-                pickedUpComponent._isDragging = true;
-                _playerInputComponent._isDraggingItem = true;
+        if (_playerInputComponent._isHoldingMouseButton) {
+            if (insideBoundingBox() && vm.has(_selectedEntity)) {
+                if (insideInventory()) {
+                    _selectedEntity.add(new DraggingComponent());
+                    _playerInputComponent._isDraggingItem = true;
+                }
+                else {
+                    PositionComponent itemPos = pm.get(_selectedEntity);
+                    PositionComponent playerPos = pm.get(_playerEntities.first());
+                    if (itemPos._pos.dst(playerPos._centerPos) < 1.5) {
+                        if (!dm.has(_selectedEntity)) {
+                            _playerInputComponent._isDraggingItem = true;
+                            _selectedEntity.add(new DraggingComponent());
+                        }
+                    }
+                }
             }
         }
     }
@@ -202,6 +230,24 @@ public class InventorySystem extends EntitySystem{
         }
         _selectedEntity = null;
         return false;
+    }
+
+    private int getFreeSlot() {
+        PickedUpComponent upComp;
+        ArrayList<Integer> takenSlots = new ArrayList<Integer>();
+        for (int i = 0; i < _itemEntities.size(); i++) {
+            Entity item = _itemEntities.get(i);
+            if (pum.has(item)) {
+                upComp = pum.get(item);
+                takenSlots.add(upComp._inventorySlot);
+            }
+        }
+
+        for (int i = 0; i < INV_SIZE * INV_SIZE; i++) {
+            if (!takenSlots.contains(i))
+                return i;
+        }
+        return -1;
     }
 
     private void removeEquippedWeapon() {

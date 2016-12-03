@@ -5,6 +5,7 @@ import com.anecoz.br.components.*;
 import com.anecoz.br.components.weapon.ReloadTimerComponent;
 import com.anecoz.br.components.weapon.RpmTimerComponent;
 import com.anecoz.br.components.weapon.ShootingComponent;
+import com.anecoz.br.network.shared.SharedNetwork;
 import com.anecoz.br.systems.*;
 import com.anecoz.br.utils.ResourceHandler;
 import com.badlogic.ashley.core.Engine;
@@ -53,7 +54,7 @@ public class EntityManager {
         Entity weapon4 = new Entity();
         Entity weapon5 = new Entity();
 
-        weapon1.add(new ShootingComponent(80, 40, 40, true))
+        weapon1.add(new ShootingComponent(80, 40, 40, true, SharedNetwork.WEAPON_TYPE.RIFLE))
                 .add(new PickedUpComponent(true, 0))
                 .add(new RpmTimerComponent(500))
                 .add(new ReloadTimerComponent(60))
@@ -64,7 +65,7 @@ public class EntityManager {
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
-        weapon2.add(new ShootingComponent(80, 40, 40, true))
+        weapon2.add(new ShootingComponent(80, 40, 40, true, SharedNetwork.WEAPON_TYPE.RIFLE))
                 .add(new PickedUpComponent(false, 1))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
@@ -75,7 +76,7 @@ public class EntityManager {
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
-        weapon3.add(new ShootingComponent(80, 40, 40, true))
+        weapon3.add(new ShootingComponent(80, 40, 40, true, SharedNetwork.WEAPON_TYPE.RIFLE))
                 .add(new PickedUpComponent(false, 2))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
@@ -86,7 +87,7 @@ public class EntityManager {
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
-        weapon4.add(new ShootingComponent(80, 40, 40, true))
+        weapon4.add(new ShootingComponent(80, 40, 40, true, SharedNetwork.WEAPON_TYPE.RIFLE))
                 .add(new PickedUpComponent(false, 3))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))
@@ -97,7 +98,7 @@ public class EntityManager {
                 .add(new TextComponent("", new Vector2(10, 30)))
                 .add(new VisibilityComponent())
                 .add(new BoundingBoxComponent(new Vector2(0,0)));
-        weapon5.add(new ShootingComponent(80, 40, 40, true))
+        weapon5.add(new ShootingComponent(80, 40, 40, true, SharedNetwork.WEAPON_TYPE.RIFLE))
                 .add(new PickedUpComponent(false, 4))
                 .add(new RpmTimerComponent(300))
                 .add(new ReloadTimerComponent(60))

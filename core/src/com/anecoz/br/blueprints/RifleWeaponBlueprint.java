@@ -38,7 +38,7 @@ public class RifleWeaponBlueprint implements WeaponBlueprint {
         int magCount = 40;
         if (_ammo < 40)
             magCount = _ammo;
-        output.add(new ShootingComponent(_ammo, 40, magCount, true));
+        output.add(new ShootingComponent(_ammo, 40, magCount, true, SharedNetwork.WEAPON_TYPE.RIFLE));
         output.add(new RpmTimerComponent(500));
         output.add(new ReloadTimerComponent(60));
         output.add(new ProjectileFactoryComponent(new BulletProjectileBlueprint()));
