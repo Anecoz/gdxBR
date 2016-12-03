@@ -118,8 +118,9 @@ public class InventorySystem extends EntitySystem{
                 posCompInvItems._pos.y = slotY * adjustedSlotSize * EntityManager.PIX_TO_WORLD_FACTOR + posCompInv._pos.y;
                 boxComponent._boundingBox.setPosition(posCompInvItems._pos.x, posCompInvItems._pos.y);
             }
+
+            updateEquipment();
         }
-        updateEquipment();
     }
 
     private void updateEquipment() {
@@ -135,11 +136,12 @@ public class InventorySystem extends EntitySystem{
                     PositionComponent playerPos = pm.get(player);
                     RenderComponent renComp = rm.get(item);
                     ShootingComponent shootComp = sm.get(item);
+                    BoundingBoxComponent bboxComp = bbm.get(item);
                     renComp._bin = -1;
                     posComp._pos.x = playerPos._pos.x;
                     posComp._pos.y = playerPos._pos.y;
+                    bboxComp._boundingBox.setPosition(new Vector2(playerPos._pos));
                     item.remove(PickedUpComponent.class);
-                    item.remove(BoundingBoxComponent.class);
                     ClientSender.dropItem(new Vector2(playerPos._pos.x, playerPos._pos.y), shootComp._ammunitionCount, SharedNetwork.WEAPON_TYPE.RIFLE);
                 }
             }
@@ -158,7 +160,7 @@ public class InventorySystem extends EntitySystem{
         if (_playerInputComponent._isDraggingItem)
             return;
         PickedUpComponent pickedUpComponent;
-        if (insideBoundingBox() && vm.has(_selectedEntity)) {
+        if (insideInventory() && insideBoundingBox() && vm.has(_selectedEntity)) {
             if (_playerInputComponent._isHoldingMouseButton) {
                 pickedUpComponent = pum.get(_selectedEntity);
                 pickedUpComponent._isDragging = true;
